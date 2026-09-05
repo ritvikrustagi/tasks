@@ -1,0 +1,29 @@
+diff --git a/chrome/browser/ui/BUILD.gn b/chrome/browser/ui/BUILD.gn
+index 017a8c3ff755f6e4142567d04740f682c2800b2b..aae7e378e8e003a2c371317a3a72b06d3101ca18 100644
+--- a/chrome/browser/ui/BUILD.gn
++++ b/chrome/browser/ui/BUILD.gn
+@@ -8,6 +8,7 @@ import("//build/config/features.gni")
+ import("//build/config/ozone.gni")
+ import("//build/config/ui.gni")
+ import("//chrome/browser/buildflags.gni")
++import("//chrome/browser/sparkle_buildflags.gni")
+ import("//chrome/common/features.gni")
+ import("//components/captive_portal/core/features.gni")
+ import("//components/compose/features.gni")
+@@ -492,6 +493,7 @@ static_library("ui") {
+     "//chrome/browser/bookmarks",
+     "//chrome/browser/bookmarks:impl",
+     "//chrome/browser/breadcrumbs",
++    "//chrome/browser/browseros/onboarding",
+     "//chrome/browser/commerce",
+     "//chrome/browser/complex_tasks",
+     "//chrome/browser/component_updater",
+@@ -1476,6 +1478,8 @@ static_library("ui") {
+       "webui/settings/appearance_handler.h",
+       "webui/settings/browser_lifetime_handler.cc",
+       "webui/settings/browser_lifetime_handler.h",
++      "webui/settings/browseros_metrics_handler.cc",
++      "webui/settings/browseros_metrics_handler.h",
+       "webui/settings/captions_handler.cc",
+       "webui/settings/captions_handler.h",
+       "webui/settings/custom_home_pages_table_model.cc",

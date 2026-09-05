@@ -1,0 +1,47 @@
+**/.DS_Store
+**.auctor/**
+.auctor.json
+.gcs_entries
+**/dmg
+**/env
+**/logs
+**/old-scripts
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.egg-info/
+**/*.egg
+**/.pytest_cache/
+**/dist/
+**/releases/
+**/.wrangler/
+**/node_modules/
+**/.turbo/
+
+# Non-bun lock files (the repo standardizes on bun; only bun.lock is tracked)
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+
+
+nxtscape-cli-access.json
+gclient.json
+.env
+.env.production
+.grove/
+AGENTS.md
+**/resources/binaries/
+
+packages/browseros/build/tools/
+packages/browseros/build/extensions/
+
+# AI SDK DevTools traces
+.devtools/
+.omc/
+.llm/
+.context/
+packages/browseros-agent/apps/research/data/
+packages/browseros-agent/apps/research/test-results/

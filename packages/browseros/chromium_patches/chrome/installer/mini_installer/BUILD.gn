@@ -1,0 +1,26 @@
+diff --git a/chrome/installer/mini_installer/BUILD.gn b/chrome/installer/mini_installer/BUILD.gn
+index 7128e8164e86664c7456b1e2b53334a27df3c0b0..c4a28bd47cc1774b9babaf3246059affdd91ade1 100644
+--- a/chrome/installer/mini_installer/BUILD.gn
++++ b/chrome/installer/mini_installer/BUILD.gn
+@@ -6,6 +6,7 @@ import("//build/config/compiler/compiler.gni")
+ import("//build/config/python.gni")
+ import("//build/config/ui.gni")
+ import("//build/timestamp.gni")
++import("//chrome/browser/sparkle_buildflags.gni")
+ import("//chrome/process_version_rc_template.gni")
+ import("//third_party/dawn/scripts/dawn_features.gni")
+ import("//third_party/ffmpeg/ffmpeg_options.gni")
+@@ -228,6 +229,13 @@ action("mini_installer_archive") {
+     inputs += [ "$root_out_dir/icudtl.dat" ]
+   }
+ 
++  if (enable_winsparkle) {
++    # chrome.release stages WinSparkle.dll into the version dir; depend on the
++    # copy so the archive step never races it.
++    inputs += [ "$root_out_dir/WinSparkle.dll" ]
++    deps += [ "//third_party/winsparkle:winsparkle_dll" ]
++  }
++
+   if (v8_use_external_startup_data) {
+     deps += [ "//v8" ]
+     if (use_v8_context_snapshot) {
