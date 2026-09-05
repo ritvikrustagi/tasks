@@ -52,7 +52,7 @@ try {
   await page.screenshot({ path: 'test-results/desktop-empty.png' })
   await page.type(
     'textarea[name="question"]',
-    'Compare vendor pricing and retention for our team',
+    '[UI test: simulated sources] Compare vendor pricing and retention for our team',
   )
   await page.click('input[name="consent"]')
   await page.click('input[name="failOnce"]')
@@ -64,12 +64,34 @@ try {
   await page.waitForFunction(() =>
     document.body.textContent?.includes('Why we searched again'),
   )
+  await page.click('.sources details summary')
+  await page.waitForSelector('.sources details[open] .source-impact a')
+  assert(
+    await page.$eval('.sources details[open]', (el) =>
+      el.textContent?.includes('Cited in final findings'),
+    ),
+  )
   await page.screenshot({
     path: 'test-results/desktop-result-fixture.png',
     fullPage: true,
   })
+  const saved = await page.evaluate(async () => {
+    const link = document.querySelector<HTMLAnchorElement>(
+      'a[title="Download saved research steps and evidence"]',
+    )!
+    return (await fetch(link.href)).json()
+  })
+  assert.equal(saved.events.length, 4)
+  assert.equal(
+    saved.events[2].result.query,
+    'Example vendor official retention policy',
+  )
+  await Bun.write(
+    'test-results/saved-evidence-fixture.json',
+    JSON.stringify(saved, null, 2),
+  )
   assert.equal(await page.$$eval('.report', (els) => els.length), 1)
-  assert.equal(await page.$$eval('.sources details', (els) => els.length), 1)
+  assert.equal(await page.$$eval('.sources details', (els) => els.length), 2)
   for (const width of [390, 320]) {
     await page.setViewport({ width, height: 844 })
     assert(
@@ -100,7 +122,7 @@ try {
   )
   assert.deepEqual(errors, [])
   console.log(
-    'UI passed: desktop/mobile, failure/resume, one report/source, connection states, no page errors',
+    'UI passed: desktop/mobile, failure/resume, one report/two saved searches, connection states, no page errors',
   )
 } finally {
   await browser.close()

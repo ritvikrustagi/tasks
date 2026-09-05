@@ -19,7 +19,8 @@ import {
   X,
 } from 'lucide-react'
 import { type FormEvent, useRef, useState } from 'react'
-import { combinedSources, steps, type Task } from '../src/schema'
+import { combinedSources, type Task } from '../src/schema'
+import { ResearchSteps } from './ResearchSteps'
 
 const keys = {
   health: ['health'],
@@ -46,12 +47,6 @@ type Config = {
   ready: boolean
   allowFailure: boolean
   connections: { name: string; purpose: string; configured: boolean }[]
-}
-const labels = {
-  search: 'Gather evidence',
-  investigate: 'Identify gaps',
-  followup: 'Verify findings',
-  report: 'Write report',
 }
 
 export function App() {
@@ -229,6 +224,45 @@ export function App() {
                 </div>
               ))}
             </div>
+            <section>
+              <h2>Set up Linkup</h2>
+              <p>
+                <a
+                  href="https://app.linkup.so"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Create an account and API key
+                </a>
+                , then configure it on the research server.{' '}
+                <a
+                  href="https://docs.linkup.so/pages/documentation/get-started/quickstart"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Setup guide
+                </a>
+              </p>
+              <p>
+                Research uses two standard searches with raw results: $0.005
+                each, or $0.01 per completed run before retries and model or
+                hosting costs. The paid Research API is not required.
+              </p>
+              <p>
+                Linkup lists $20 in signup credits for professional email
+                addresses, with eligible accounts topped back up to $20 monthly.
+                Eligibility is not guaranteed, and this public allowance is
+                separate from event credits.{' '}
+                <a
+                  href="https://docs.linkup.so/pages/documentation/platform/pricing"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Check current pricing and conditions
+                </a>{' '}
+                (checked September 5, 2026).
+              </p>
+            </section>
             <p className="privacy">
               Only the question and context you approve are sent for research.
               Linkup receives search queries; Nebius receives the brief and
@@ -246,6 +280,14 @@ export function App() {
                 <h1>{current.question}</h1>
               </div>
               <div className="actions">
+                <a
+                  className="icon-button"
+                  href={`/api/tasks/${current.id}/evidence`}
+                  title="Download saved research steps and evidence"
+                  aria-label="Download saved research steps and evidence"
+                >
+                  <Download size={18} /> Evidence
+                </a>
                 {['running', 'queued'].includes(current.state) && (
                   <button
                     type="button"
@@ -329,8 +371,9 @@ export function App() {
             </div>
             <h1>What are you investigating?</h1>
             <p className="subtitle">
-              Start with a question. Add the requirements and context that
-              matter.
+              Use Linkup to search the web, save sources, investigate missing
+              information, and produce a cited answer. Follow every step as it
+              runs.
             </p>
             <Composer
               key={brief.data?.text === undefined ? 'loading' : 'loaded'}
@@ -513,59 +556,11 @@ function Composer({
 function TaskDetail({ task }: { task: Task }) {
   const results = task.events.flatMap((e) => (e.result ? [e.result] : [])),
     sources = combinedSources(results),
-    report = results.find((r) => r.report)?.report,
-    plan = results.find((r) => r.plan)?.plan
+    report = results.find((r) => r.report)?.report
   const usage = results.flatMap((r) => (r.usage ? [r.usage] : []))
   return (
     <>
-      <div className="timeline">
-        {steps.map((step, i) => {
-          const e = task.events.find((e) => e.step === step)
-          return (
-            <div className="stage" key={step}>
-              <div
-                className={`stage-marker ${e?.state === 'succeeded' ? 'done' : ''}`}
-              >
-                {e?.state === 'succeeded' ? (
-                  <Check size={15} />
-                ) : e?.state === 'running' && task.state === 'running' ? (
-                  <Loader2 className="spin" size={15} />
-                ) : (
-                  i + 1
-                )}
-              </div>
-              <div>
-                <strong>{labels[step]}</strong>
-                <span>
-                  {e
-                    ? `${e.state} ${e.attempts > 1 ? `/ attempt ${e.attempts}` : ''}`
-                    : 'Waiting'}
-                </span>
-                {e?.error && <p className="error">{e.error}</p>}
-                {e?.result?.query && <p className="query">{e.result.query}</p>}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      {plan && (
-        <section>
-          <div className="section-heading">
-            <FlaskConical size={17} />
-            <h2>Why we searched again</h2>
-          </div>
-          <p>{plan.reason}</p>
-          <ul>
-            {plan.gaps.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
-          <div className="search-query">
-            <Search size={15} />
-            {plan.query}
-          </div>
-        </section>
-      )}
+      <ResearchSteps task={task} />
       {report && (
         <section className="report">
           <div className="section-heading">
@@ -574,7 +569,7 @@ function TaskDetail({ task }: { task: Task }) {
           </div>
           <p>{report.summary}</p>
           {report.findings.map((f, i) => (
-            <div className="finding" key={f.text}>
+            <div className="finding" id={`finding-${i + 1}`} key={f.text}>
               <span className="finding-number">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -594,7 +589,7 @@ function TaskDetail({ task }: { task: Task }) {
               </div>
             </div>
           ))}
-          <h3>Uncertainty</h3>
+          <h3>Could not confirm</h3>
           {report.uncertainties.length ? (
             <ul>
               {report.uncertainties.map((u) => (
@@ -613,33 +608,6 @@ function TaskDetail({ task }: { task: Task }) {
               <li key={a}>{a}</li>
             ))}
           </ul>
-        </section>
-      )}
-      {sources.length > 0 && (
-        <section>
-          <div className="section-heading">
-            <Globe2 size={17} />
-            <h2>Saved evidence</h2>
-            <span className="tag">{sources.length} sources</span>
-          </div>
-          <div className="sources">
-            {sources.map((s, i) => (
-              <details key={s.id}>
-                <summary>
-                  <span className="source-number">{i + 1}</span>
-                  <span>
-                    {s.title}
-                    <small>{new URL(s.url).hostname}</small>
-                  </span>
-                  <ArrowUpRight size={15} />
-                </summary>
-                <p>{s.content}</p>
-                <a href={s.url} target="_blank" rel="noreferrer">
-                  Open source <ArrowUpRight size={13} />
-                </a>
-              </details>
-            ))}
-          </div>
         </section>
       )}
       <section className="metrics">

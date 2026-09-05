@@ -255,6 +255,13 @@ export function createResearchApp(
     c.header('Content-Disposition', 'attachment; filename="research-report.md"')
     return c.text(reportMarkdown(store.get(c.req.param('id'))!))
   })
+  app.get('/api/tasks/:id/evidence', (c) => {
+    c.header(
+      'Content-Disposition',
+      'attachment; filename="research-evidence.json"',
+    )
+    return c.json(store.get(c.req.param('id')))
+  })
 
   app.post('/internal/tasks/:id/claim/:step', (c) => {
     const step = z.enum(steps).parse(c.req.param('step'))
