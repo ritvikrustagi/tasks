@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Download AI Browser for Mac. Browse with an AI assistant beside your tabs, using your own Claude Code or Codex connection.">
+  <meta name="theme-color" content="#f8f6f1">
+  <title>AI Browser — Your browser, with an assistant built in</title>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <style>
+    :root { color-scheme: light; --paper:#f8f6f1; --ink:#242720; --muted:#64675e; --line:#dcded3; --orange:#ed6338; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-underline-offset:4px; }
+    a:focus-visible { outline:3px solid #305bce; outline-offset:5px; }
+    .wrap { width:min(1240px,calc(100% - 96px)); margin-inline:auto; }
+    .skip { position:absolute; left:16px; top:-100px; background:white; padding:12px; z-index:10; }
+    .skip:focus { top:12px; }
+    nav { height:104px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:20px; letter-spacing:-.6px; text-decoration:none; }
+    .brand img { width:35px; height:35px; }
+    .nav-links { display:flex; align-items:center; gap:30px; font-size:14px; }
+    .nav-links a { text-decoration:none; }
+    .nav-links a:hover { text-decoration:underline; }
+    .nav-download { border:1px solid var(--line); border-radius:8px; padding:9px 16px; }
+    .hero { display:grid; grid-template-columns:1fr 1.08fr; gap:54px; align-items:center; padding:82px 0 76px; }
+    .eyebrow { display:flex; align-items:center; gap:9px; color:#51584b; font-size:11px; letter-spacing:1.7px; font-weight:650; text-transform:uppercase; }
+    .dot { width:7px; height:7px; background:#77886e; border-radius:50%; }
+    h1 { margin:25px 0; font-size:clamp(44px,4.8vw,66px); font-weight:550; line-height:1.07; letter-spacing:-3.3px; }
+    h1 em { font-family:Georgia,"Times New Roman",serif; font-weight:400; }
+    .intro { max-width:430px; margin:0 0 31px; font-size:18px; line-height:1.7; color:var(--muted); }
+    .cta { display:inline-flex; gap:23px; align-items:center; justify-content:center; border-radius:9px; background:var(--orange); color:#fff; padding:15px 22px; text-decoration:none; font-size:15px; font-weight:650; box-shadow:0 2px 0 #c84823; transition:background .15s,transform .15s; }
+    .cta:hover { background:#d94f28; transform:translateY(-1px); }
+    .cta svg { width:18px; height:18px; }
+    .download-meta { margin:15px 0 0; color:var(--muted); font-size:12px; }
+    .version { margin:9px 0 0; color:var(--muted); font-size:12px; }
+    .preview { margin:0; position:relative; }
+    .preview-mat { padding:23px; background:#e3e9de; border-radius:20px; border:1px solid #d8e0d2; }
+    .preview img { display:block; width:100%; height:auto; border-radius:10px; box-shadow:0 16px 38px #23331f20,0 0 0 1px #243c1f12; }
+    figcaption { margin:16px 0 0; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:11px; }
+    .caption-mark { letter-spacing:1.5px; font-size:10px; text-transform:uppercase; }
+    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:44px; padding:36px 0 45px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .feature-num { color:#7c826f; font-family:ui-monospace,monospace; font-size:11px; }
+    h2,h3,p { margin-top:0; }
+    .features h2 { margin:12px 0 8px; font-size:18px; line-height:1.35; letter-spacing:-.4px; font-weight:600; }
+    .features p { margin:0; color:var(--muted); font-size:14px; max-width:310px; }
+    .setup { display:grid; grid-template-columns:.95fr 1.4fr; gap:80px; padding:76px 0; }
+    .setup h2 { margin:18px 0 17px; font-size:38px; font-weight:550; line-height:1.12; letter-spacing:-1.5px; }
+    .setup-intro { color:var(--muted); font-size:14px; max-width:290px; }
+    ol { list-style:none; margin:0; padding:0; counter-reset:install; }
+    li { counter-increment:install; position:relative; padding:0 0 23px 44px; margin-bottom:23px; border-bottom:1px solid var(--line); }
+    li:last-child { border:0; margin-bottom:0; padding-bottom:0; }
+    li::before { content:counter(install,decimal-leading-zero); position:absolute; left:0; top:2px; font:12px/1.6 ui-monospace,monospace; color:#7c826f; }
+    li h3 { font-size:16px; margin:0 0 5px; font-weight:600; }
+    li p { margin:0; color:var(--muted); font-size:14px; }
+    .build-note { padding:22px 25px; background:#eeeee5; border-radius:10px; font-size:13px; color:#5c6054; }
+    .build-note p { margin:0; }
+    .build-note p+p { margin-top:7px; }
+    footer { padding:34px 0; display:flex; align-items:center; justify-content:space-between; gap:25px; font-size:12px; color:var(--muted); }
+    footer .links { display:flex; gap:21px; }
+    @media (min-width:1500px) { .hero { padding-block:104px; } }
+    @media (max-width:950px) { .wrap { width:calc(100% - 48px); } .hero { gap:30px; padding-block:60px; } h1 { font-size:48px; letter-spacing:-2.4px; } .intro { font-size:16px; } .preview-mat { padding:14px; } .setup { gap:40px; } }
+    @media (max-width:700px) { .wrap { width:calc(100% - 40px); } nav { height:80px; } .nav-links { gap:18px; } .nav-links .source-link { display:none; } .brand { font-size:18px; } .hero { grid-template-columns:1fr; padding:49px 0 40px; gap:37px; } h1 { font-size:50px; max-width:420px; } .intro { max-width:440px; } .cta { width:100%; } .download-meta,.version { text-align:center; } .features { grid-template-columns:1fr; gap:27px; padding-block:30px; } .features h2 { margin-top:7px; } .features p { max-width:none; } .setup { grid-template-columns:1fr; gap:24px; padding:45px 0; } .setup h2 { font-size:34px; } .setup-intro { max-width:none; } footer { align-items:flex-start; flex-direction:column; gap:14px; } figcaption { font-size:10px; } }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .cta { transition:none; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="/"><img src="/icon.png" alt="" width="35" height="35">AI Browser</a>
+      <div class="nav-links"><a class="source-link" href="https://github.com/ritvikrustagi/tasks">Source code ↗</a><a class="nav-download" href="#install">Get the app <span aria-hidden="true">↓</span></a></div>
+    </nav>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <div class="eyebrow"><span class="dot" aria-hidden="true"></span> Made for your Mac</div>
+          <h1 id="hero-title">Your browser.<br>With an assistant<br><em>built in.</em></h1>
+          <p class="intro">Ask about the page you're on. Work across tabs. Let your assistant take the next step, right beside you.</p>
+          <a class="cta" href="https://github.com/ritvikrustagi/tasks/releases/download/desktop-v0.1.0/AI-Browser-macOS-arm64.zip">Download for Mac <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg></a>
+          <p class="download-meta">Apple Silicon · macOS 14 or later · 470 MB ZIP</p>
+          <p class="version">v0.1.0 development alpha · Not Apple-notarized</p>
+        </div>
+        <figure class="preview">
+          <div class="preview-mat"><img src="/app-preview.png" alt="AI Browser desktop app with vertical tabs and the ChatGPT (Codex) assistant open beside the current page." width="1723" height="1439" fetchpriority="high"></div>
+          <figcaption><span class="caption-mark">The desktop app</span><span>Your tabs and assistant, together.</span></figcaption>
+        </figure>
+      </section>
+      <section class="features" aria-label="Inside AI Browser">
+        <div><span class="feature-num">01 / IN CONTEXT</span><h2>Your tabs are the starting point.</h2><p>Attach a page to your conversation, ask a question, and follow along as your assistant browses.</p></div>
+        <div><span class="feature-num">02 / YOUR CONNECTION</span><h2>Claude or ChatGPT. Your choice.</h2><p>Connect through your signed-in Claude Code or Codex CLI. Use your own provider account.</p></div>
+        <div><span class="feature-num">03 / ON YOUR MAC</span><h2>A real browser to work in.</h2><p>Open tabs, revisit conversations, and keep browsing with the assistant in your sidebar.</p></div>
+      </section>
+      <section class="setup" id="install" aria-labelledby="install-title">
+        <div><div class="eyebrow">A FEW STEPS TO GET STARTED</div><h2 id="install-title">Make room for<br>your new assistant.</h2><p class="setup-intro">This build is for Macs with an M-series chip. Intel Mac and Windows downloads aren't available yet.</p><a href="https://github.com/ritvikrustagi/tasks/blob/main/docs/DESKTOP_SUBSCRIPTIONS.md">Read the setup guide ↗</a></div>
+        <ol>
+          <li><h3>Download and unzip.</h3><p>Download the ZIP above, then double-click it in Finder to extract AI Browser.app.</p></li>
+          <li><h3>Move it to Applications.</h3><p>Drag AI Browser.app into your Applications folder and open it. This alpha isn't notarized; see <a href="https://support.apple.com/en-us/102445">Apple's guidance</a> if macOS can't verify the app.</p></li>
+          <li><h3>Connect your assistant.</h3><p>Install and sign in to Claude Code or Codex, then open Assistant in the browser toolbar and choose your provider. Turn Agent Mode on to let it work with your tabs.</p></li>
+        </ol>
+      </section>
+      <aside class="build-note" aria-label="About this build"><p><strong>An early build, ready to explore.</strong> AI Browser is built on BrowserOS. Your own provider account and its usage limits apply.</p><p>Hosted research is still being set up. Local browsing and the desktop assistant work separately from that service.</p></aside>
+    </main>
+    <footer><span>AI Browser · Built on BrowserOS · Open source</span><div class="links"><a href="https://github.com/ritvikrustagi/tasks/releases/tag/desktop-v0.1.0">Release notes</a><a href="https://github.com/ritvikrustagi/tasks/releases/download/desktop-v0.1.0/SHA256SUMS.txt">Checksum</a><a href="https://github.com/ritvikrustagi/tasks/blob/main/LICENSE">License</a></div></footer>
+  </div>
+</body>
+</html>

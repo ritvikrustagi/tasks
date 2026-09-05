@@ -1,10 +1,10 @@
-name: Deploy research frontend to Vercel
+name: Deploy app download site to Vercel
 
 on:
   push:
     branches: [main]
     paths:
-      - 'packages/browseros-agent/apps/research/**'
+      - 'site/**'
       - '.github/workflows/deploy-vercel.yml'
   workflow_dispatch:
 
@@ -28,6 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Deploy production frontend
-        working-directory: packages/browseros-agent/apps/research
+      - name: Deploy production download site
+        working-directory: site
         run: npx --yes vercel@59.11.7 deploy --prod --yes --token "$VERCEL_TOKEN"

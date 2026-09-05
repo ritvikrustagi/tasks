@@ -31,21 +31,25 @@ Nebius writes the cited report. SQLite stores each step, evidence, and usage.
 Stop blocks further checkpoints; an already-started provider request can still
 consume credits. Resume reuses completed steps. Download exports Markdown.
 
-## Vercel frontend deployment
+## App download site
 
-The research frontend is hosted at https://burning-token-psi.vercel.app in the
-Vercel project `burning-token`. `.github/workflows/deploy-vercel.yml` deploys
-changes to `apps/research` automatically when they reach `main`; the workflow
+The desktop app download page is hosted at https://burning-token-psi.vercel.app
+in the Vercel project `burning-token`. The static site lives in `site/` and links
+to the Mac app archive in the `desktop-v0.1.0` GitHub release.
+`.github/workflows/deploy-vercel.yml` deploys changes to `site/` automatically
+when they reach `main`; the workflow
 can also be run manually from GitHub Actions. It uses the repository's encrypted
 `VERCEL_TOKEN` secret, rather than Vercel's native GitHub integration. The current
 token expires December 4, 2026; replace that secret with a renewed token before
 then to keep deployments running.
 
-Vercel hosts the frontend only. Research execution, sessions, and SQLite still
-require the persistent backend described below. Until that backend is deployed
-and `/api/*` is routed to it, the UI displays a backend-unavailable message.
-Configure the backend's public origin and verify sessions before enabling that
-route; do not point it at a local development server.
+Vercel hosts the download page, while GitHub Releases hosts the application
+archive and checksum. To publish a newer app, create a release with the verified
+Mac archive and checksum, then update the download links and version in
+`site/index.html`. Site deployment does not rebuild the desktop binary.
+
+The downloaded desktop assistant works locally. Hosted research execution,
+sessions, and SQLite still require the persistent backend described below.
 
 ## Render deployment
 
