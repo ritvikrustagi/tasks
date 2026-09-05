@@ -6,14 +6,14 @@
   <meta name="description" content="Download AI Browser for Mac. Browse with an AI assistant beside your tabs, using your own Claude Code or Codex connection.">
   <meta name="theme-color" content="#f8f6f1">
   <title>AI Browser — Your browser, with an assistant built in</title>
-  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <style>
-    :root { color-scheme: light; --paper:#f8f6f1; --ink:#242720; --muted:#64675e; --line:#dcded3; --orange:#ed6338; }
+    :root { color-scheme: light; --paper:#f8f6f1; --ink:#18383e; --muted:#5c706f; --line:#d7e1dc; --accent:#087f82; }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
     body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
     a { color:inherit; text-underline-offset:4px; }
-    a:focus-visible { outline:3px solid #305bce; outline-offset:5px; }
+    a:focus-visible { outline:3px solid var(--accent); outline-offset:5px; }
     .wrap { width:min(1240px,calc(100% - 96px)); margin-inline:auto; }
     .skip { position:absolute; left:16px; top:-100px; background:white; padding:12px; z-index:10; }
     .skip:focus { top:12px; }
@@ -25,23 +25,23 @@
     .nav-links a:hover { text-decoration:underline; }
     .nav-download { border:1px solid var(--line); border-radius:8px; padding:9px 16px; }
     .hero { display:grid; grid-template-columns:1fr 1.08fr; gap:54px; align-items:center; padding:82px 0 76px; }
-    .eyebrow { display:flex; align-items:center; gap:9px; color:#51584b; font-size:11px; letter-spacing:1.7px; font-weight:650; text-transform:uppercase; }
-    .dot { width:7px; height:7px; background:#77886e; border-radius:50%; }
+    .eyebrow { display:flex; align-items:center; gap:9px; color:#476c6d; font-size:11px; letter-spacing:1.7px; font-weight:650; text-transform:uppercase; }
+    .dot { width:7px; height:7px; background:var(--accent); border-radius:50%; }
     h1 { margin:25px 0; font-size:clamp(44px,4.8vw,66px); font-weight:550; line-height:1.07; letter-spacing:-3.3px; }
     h1 em { font-family:Georgia,"Times New Roman",serif; font-weight:400; }
     .intro { max-width:430px; margin:0 0 31px; font-size:18px; line-height:1.7; color:var(--muted); }
-    .cta { display:inline-flex; gap:23px; align-items:center; justify-content:center; border-radius:9px; background:var(--orange); color:#fff; padding:15px 22px; text-decoration:none; font-size:15px; font-weight:650; box-shadow:0 2px 0 #c84823; transition:background .15s,transform .15s; }
-    .cta:hover { background:#d94f28; transform:translateY(-1px); }
+    .cta { display:inline-flex; gap:23px; align-items:center; justify-content:center; border-radius:9px; background:var(--accent); color:#fff; padding:15px 22px; text-decoration:none; font-size:15px; font-weight:650; box-shadow:0 2px 0 #055b61; transition:background .15s,transform .15s; }
+    .cta:hover { background:#06696d; transform:translateY(-1px); }
     .cta svg { width:18px; height:18px; }
     .download-meta { margin:15px 0 0; color:var(--muted); font-size:12px; }
     .version { margin:9px 0 0; color:var(--muted); font-size:12px; }
     .preview { margin:0; position:relative; }
-    .preview-mat { padding:23px; background:#e3e9de; border-radius:20px; border:1px solid #d8e0d2; }
-    .preview img { display:block; width:100%; height:auto; border-radius:10px; box-shadow:0 16px 38px #23331f20,0 0 0 1px #243c1f12; }
+    .preview-mat { padding:23px; background:#deeeea; border-radius:20px; border:1px solid #cddfd9; }
+    .preview img { display:block; width:100%; height:auto; border-radius:10px; box-shadow:0 16px 38px #123d4320,0 0 0 1px #123d4312; }
     figcaption { margin:16px 0 0; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:11px; }
     .caption-mark { letter-spacing:1.5px; font-size:10px; text-transform:uppercase; }
     .features { display:grid; grid-template-columns:repeat(3,1fr); gap:44px; padding:36px 0 45px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-    .feature-num { color:#7c826f; font-family:ui-monospace,monospace; font-size:11px; }
+    .feature-num { color:#5e7d7a; font-family:ui-monospace,monospace; font-size:11px; }
     h2,h3,p { margin-top:0; }
     .features h2 { margin:12px 0 8px; font-size:18px; line-height:1.35; letter-spacing:-.4px; font-weight:600; }
     .features p { margin:0; color:var(--muted); font-size:14px; max-width:310px; }
@@ -51,10 +51,10 @@
     ol { list-style:none; margin:0; padding:0; counter-reset:install; }
     li { counter-increment:install; position:relative; padding:0 0 23px 44px; margin-bottom:23px; border-bottom:1px solid var(--line); }
     li:last-child { border:0; margin-bottom:0; padding-bottom:0; }
-    li::before { content:counter(install,decimal-leading-zero); position:absolute; left:0; top:2px; font:12px/1.6 ui-monospace,monospace; color:#7c826f; }
+    li::before { content:counter(install,decimal-leading-zero); position:absolute; left:0; top:2px; font:12px/1.6 ui-monospace,monospace; color:#5e7d7a; }
     li h3 { font-size:16px; margin:0 0 5px; font-weight:600; }
     li p { margin:0; color:var(--muted); font-size:14px; }
-    .build-note { padding:22px 25px; background:#eeeee5; border-radius:10px; font-size:13px; color:#5c6054; }
+    .build-note { padding:22px 25px; background:#e9efea; border-radius:10px; font-size:13px; color:#506b68; }
     .build-note p { margin:0; }
     .build-note p+p { margin-top:7px; }
     footer { padding:34px 0; display:flex; align-items:center; justify-content:space-between; gap:25px; font-size:12px; color:var(--muted); }
@@ -69,7 +69,7 @@
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap">
     <nav aria-label="Main navigation">
-      <a class="brand" href="/"><img src="/icon.png" alt="" width="35" height="35">AI Browser</a>
+      <a class="brand" href="/"><img src="/icon.svg" alt="" width="35" height="35">AI Browser</a>
       <div class="nav-links"><a class="source-link" href="https://github.com/ritvikrustagi/tasks">Source code ↗</a><a class="nav-download" href="#install">Get the app <span aria-hidden="true">↓</span></a></div>
     </nav>
     <main id="main">
