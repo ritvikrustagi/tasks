@@ -1,9 +1,9 @@
-# Open-Source AI Browser
+# DeepTrail Product Spec
 
 Status: BrowserOS foundation imported; research alpha implemented. Native release
 and live provider/deployment acceptance remain unverified. See DEVELOPMENT.md.
 Date: 2026-09-05.
-Working name: AI Browser. Final branding is undecided.
+Working name: DeepTrail.
 
 ## 1. Product Definition
 
@@ -15,7 +15,7 @@ research path is an intentional addition to the originally local-only task
 scope; ordinary browser automation remains local. See DEVELOPMENT.md for
 implemented behavior, setup, and the remaining release gates.
 
-A desktop browser where users can ask an AI to complete work across websites they are logged into, inspect its progress, and take over whenever needed. Users choose their AI provider, retain control over browser context and files, and can inspect the source code.
+DeepTrail is a research browser where users can ask an AI to complete work across websites they are logged into, inspect its progress, and take over whenever needed. Users choose their AI provider, retain control over browser context and files, and can inspect the source code.
 
 The central interaction is: give a task, let the agent work in visible browser tabs, review any consequential action, and receive a verifiable result.
 

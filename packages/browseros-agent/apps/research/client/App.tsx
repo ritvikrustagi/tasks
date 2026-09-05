@@ -99,10 +99,10 @@ export function App() {
   return (
     <div className="shell">
       <aside className="rail">
-        <a className="brand" href="/" aria-label="AI Browser research home">
+        <a className="brand" href="/" aria-label="DeepTrail research home">
           <Globe2 />
           <span>
-            AI Browser<span className="brand-sub">RESEARCH WORKSPACE</span>
+            DeepTrail<span className="brand-sub">RESEARCH WORKSPACE</span>
           </span>
         </a>
         <button
@@ -207,8 +207,8 @@ export function App() {
             <div className="eyebrow">WORKSPACE SETTINGS</div>
             <h1>Connections</h1>
             <p className="subtitle">
-              Research uses the services configured for this workspace. Your
-              browser's chat providers remain separate.
+              Research uses Linkup, Nebius, and Render settings configured for
+              this workspace. Browser chat providers remain separate.
             </p>
             <div className="connections">
               {config.data?.connections.map((c) => (
@@ -373,9 +373,9 @@ export function App() {
             </div>
             <h1>What are you investigating?</h1>
             <p className="subtitle">
-              Use Linkup to search the web, save sources, investigate missing
-              information, and produce a cited answer. Follow every step as it
-              runs.
+              Use Linkup to search the web, Nebius to reason over the saved
+              evidence, and Render Workflows to run recoverable background
+              steps.
             </p>
             <Composer
               key={brief.data?.text === undefined ? 'loading' : 'loaded'}
