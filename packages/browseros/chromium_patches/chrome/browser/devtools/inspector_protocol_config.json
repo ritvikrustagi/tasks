@@ -1,0 +1,26 @@
+diff --git a/chrome/browser/devtools/inspector_protocol_config.json b/chrome/browser/devtools/inspector_protocol_config.json
+index a40e58a09294072cfe986950a0676a10ae39b7da..31c62380459bfc174c74f784b5b482fcbbe97f6f 100644
+--- a/chrome/browser/devtools/inspector_protocol_config.json
++++ b/chrome/browser/devtools/inspector_protocol_config.json
+@@ -17,9 +17,20 @@
+             },
+             {
+                 "domain": "Browser",
+-                "include": [ "getWindowForTarget", "getWindowBounds", "setWindowBounds", "setContentsSize", "close", "setDockTile", "executeBrowserCommand", "addPrivacySandboxEnrollmentOverride" ],
++                "include": [ "getWindowForTarget", "getTabForTarget", "getTargetForTab", "getWindowBounds", "setWindowBounds", "setContentsSize", "close", "setDockTile", "executeBrowserCommand", "addPrivacySandboxEnrollmentOverride", "getWindows", "getActiveWindow", "createWindow", "closeWindow", "activateWindow", "setWindowVisibility", "getTabs", "getActiveTab", "getTabInfo", "createTab", "closeTab", "activateTab", "moveTab", "duplicateTab", "pinTab", "unpinTab", "showTab", "getTabGroups", "createTabGroup", "updateTabGroup", "closeTabGroup", "addTabsToGroup", "removeTabsFromGroup", "moveTabGroup" ],
+                 "include_events": []
+             },
++            {
++                "domain": "Bookmarks",
++                "include": ["getBookmarks", "searchBookmarks", "createBookmark", "updateBookmark", "moveBookmark", "removeBookmark"],
++                "include_events": []
++            },
++            {
++                "domain": "History",
++                "include": ["search", "getRecent", "deleteUrl", "deleteRange"],
++                "include_events": [],
++                "async": ["search", "getRecent", "deleteUrl", "deleteRange"]
++            },
+             {
+                 "domain": "Target",
+                 "include": [ "setRemoteLocations", "createTarget" ],

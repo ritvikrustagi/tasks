@@ -1,0 +1,37 @@
+# Web entry point only. Create the separate Workflow service per DEVELOPMENT.md.
+services:
+  - type: web
+    name: browser-research
+    runtime: node
+    plan: starter
+    rootDir: packages/browseros-agent
+    buildCommand: bun install --frozen-lockfile --ignore-scripts && bun run --cwd apps/research build
+    startCommand: bun run --cwd apps/research start
+    healthCheckPath: /api/health
+    disk:
+      name: research-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: BUN_VERSION
+        value: 1.4.2
+      - key: RESEARCH_DB
+        value: /var/data/research.sqlite
+      - key: RESEARCH_EXECUTOR
+        value: render
+      - key: RESEARCH_ORIGIN
+        sync: false
+      - key: RESEARCH_ACCESS_CODE
+        generateValue: true
+      - key: RESEARCH_WORKER_SECRET
+        generateValue: true
+      - key: LINKUP_API_KEY
+        sync: false
+      - key: NEBIUS_API_KEY
+        sync: false
+      - key: NEBIUS_MODEL
+        sync: false
+      - key: RENDER_API_KEY
+        sync: false
+      - key: RENDER_WORKFLOW_SLUG
+        sync: false

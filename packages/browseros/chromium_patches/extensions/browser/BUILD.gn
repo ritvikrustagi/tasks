@@ -1,0 +1,12 @@
+diff --git a/extensions/browser/BUILD.gn b/extensions/browser/BUILD.gn
+index 858019a86af3655ee32da49fed60946ab4321a76..e21c601ef2d2c4ddd703e5fd0e8e1fb7bccdf0e0 100644
+--- a/extensions/browser/BUILD.gn
++++ b/extensions/browser/BUILD.gn
+@@ -606,6 +606,7 @@ source_set("browser_sources") {
+     ":cws_item_service_proto",
+     "//base",
+     "//base:i18n",
++    "//chrome/browser/browseros/core",
+     "//build:android_buildflags",
+     "//build:chromeos_buildflags",
+     "//components/back_forward_cache",

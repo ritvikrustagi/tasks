@@ -8,7 +8,9 @@ Source: the track descriptions supplied by the team and the attached “Credits 
 
 ## Product direction
 
-The workspace currently has no product implementation. Before building, define:
+The original planning checklist below is now implemented in part by the AI
+Browser research alpha. See [evidence and remaining gaps](docs/RUBRIC_EVIDENCE.md)
+and [development setup](DEVELOPMENT.md). Define and verify:
 
 - **User:** who needs this?
 - **Task:** what useful work will the product finish for them?
