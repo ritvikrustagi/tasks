@@ -1,0 +1,78 @@
+name: Browser input diagnosis
+on:
+  push:
+    paths: ['.github/workflows/browser-diagnostic.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: packages/browseros-agent
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: packages/browseros-agent/package.json
+      - name: Prepare CI browser
+        run: |
+          mkdir -p .ci/bin
+          curl -fsSL https://files.browseros.com/download/BrowserOS.AppImage -o .ci/bin/BrowserOS.AppImage
+          chmod +x .ci/bin/BrowserOS.AppImage
+          cat > .ci/bin/browseros <<'SH'
+          #!/bin/bash
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          export XDG_SESSION_TYPE=x11
+          exec xvfb-run --auto-servernum "$(dirname "$0")/BrowserOS.AppImage" "$@"
+          SH
+          chmod +x .ci/bin/browseros
+      - name: Compare background input prerequisites
+        env:
+          BROWSEROS_BINARY: ${{ github.workspace }}/packages/browseros-agent/.ci/bin/browseros
+          BROWSEROS_TEST_HEADLESS: 'false'
+          BROWSEROS_TEST_EXTRA_ARGS: --no-sandbox --disable-dev-shm-usage
+        run: |
+          sed -i 's/^class CdpConnection/export class CdpConnection/' contracts/claw-mcp/tests/capture.ts
+          cat > contracts/claw-mcp/tests/diagnostic.ts <<'JS'
+          import { CdpConnection } from './capture'
+          import { launchBrowser } from './browser'
+          import { startFixturePair } from '../fixtures/server'
+          const fixtures = await startFixturePair()
+          const browser = await launchBrowser()
+          const cdp = await CdpConnection.connect(browser.cdpPort)
+          try {
+            console.log(await cdp.send('Browser.getVersion'))
+            for (const mode of ['baseline', 'focus', 'screenshot', 'viewport', 'foreground']) {
+              const { tab } = await cdp.send('Browser.createTab', {url: fixtures.primary.url('/form.html'), background: true}) as any
+              const { sessionId } = await cdp.send('Target.attachToTarget', {targetId: tab.targetId, flatten: true}) as any
+              const send = (method, params={}) => cdp.send(method, params, sessionId)
+              await send('Page.enable')
+              await send('Runtime.enable')
+              async function evaluate(expression) {
+                return ((await send('Runtime.evaluate', {expression, returnByValue:true})) as any).result.value
+              }
+              for(let i=0;i<100;i++) {
+                if(await evaluate('!!document.getElementById("name")')) break
+                await Bun.sleep(100)
+              }
+              if(mode==='focus') await send('Emulation.setFocusEmulationEnabled', {enabled:true})
+              if(mode==='screenshot') await send('Page.captureScreenshot', {format:'png'})
+              if(mode==='viewport') await send('Emulation.setDeviceMetricsOverride', {width:1280,height:720,deviceScaleFactor:1,mobile:false})
+              if(mode==='foreground') await cdp.send('Browser.activateTab', {tabId:tab.tabId})
+              const state = await evaluate('JSON.stringify({focus:document.hasFocus(),visibility:document.visibilityState,width:innerWidth,height:innerHeight})')
+              const point = await evaluate('(()=>{const r=document.getElementById("name").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()')
+              for (const type of ['mouseMoved','mousePressed','mouseReleased']) await send('Input.dispatchMouseEvent',{type,...point,button:'left',clickCount:1})
+              await send('Input.insertText',{text:'diagnostic'})
+              console.log(JSON.stringify({mode,state,point,value:await evaluate('document.getElementById("name").value')}))
+              await cdp.send('Browser.closeTab', {tabId:tab.tabId})
+            }
+          } finally {
+            cdp.close()
+            await browser.kill()
+            await fixtures.stop()
+          }
+          JS
+          bun contracts/claw-mcp/tests/diagnostic.ts
