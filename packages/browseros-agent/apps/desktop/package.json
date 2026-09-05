@@ -1,0 +1,10 @@
+{
+  "name": "@browseros/desktop",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "build": "bun package.ts",
+    "test": "bun test package.test.ts"
+  }
+}

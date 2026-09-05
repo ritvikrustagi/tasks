@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>BrowserOS Claw Server (Alpha)</title>
+    <link>https://cdn.browseros.com/appcast-claw-server.alpha.xml</link>
+    <description>BrowserOS Claw Server (Alpha) binary updates</description>
+    <language>en</language>
+
+    <item>
+      <sparkle:version>0.0.52</sparkle:version>
+      <pubDate>Fri, 04 Sep 2026 17:18:57 +0000</pubDate>
+
+      <!-- macOS arm64 -->
+      <enclosure
+        url="https://cdn.browseros.com/server/browserclaw_server_0.0.52_darwin_arm64.zip"
+        sparkle:os="macos"
+        sparkle:arch="arm64"
+        sparkle:edSignature="DoCxy+e/XjQVykFJyNmuvCAHMYY3CzRZQdujzHpx+HWxnwBYbJ2VWlFpLtR3yYHA9gw9oK+WtNqGNg+bgh7IDQ=="
+        length="11096648"
+        type="application/zip"/>
+
+      <!-- macOS x86_64 -->
+      <enclosure
+        url="https://cdn.browseros.com/server/browserclaw_server_0.0.52_darwin_x64.zip"
+        sparkle:os="macos"
+        sparkle:arch="x86_64"
+        sparkle:edSignature="bxOWGpmNjmU1uJfC5A0uTshW3fSuWOogycKWqUhgQQjQEzdVdKj1fIuldgeKN3YANj8zii4nS5bkci65M9fKAw=="
+        length="12280798"
+        type="application/zip"/>
+
+      <!-- Linux arm64 -->
+      <enclosure
+        url="https://cdn.browseros.com/server/browserclaw_server_0.0.52_linux_arm64.zip"
+        sparkle:os="linux"
+        sparkle:arch="arm64"
+        sparkle:edSignature="3AZYVXoBAp5R10pWfylCuZB2ipFMOjnFL3KE8TlbfZxPKZDEJEIAhyRAIAsYOmxY3Kz1hc8VDpo5iA0gpN2mAQ=="
+        length="11516919"
+        type="application/zip"/>
+
+      <!-- Linux x86_64 -->
+      <enclosure
+        url="https://cdn.browseros.com/server/browserclaw_server_0.0.52_linux_x64.zip"
+        sparkle:os="linux"
+        sparkle:arch="x86_64"
+        sparkle:edSignature="JhBFCYSH5j3PTiQ+QFnZm4mTqCmPMDyQOCN208Wa0W0MIp/jL1vs+bwY93lbFSQaFV12u9fsMxODWWWVPLGwBw=="
+        length="12339316"
+        type="application/zip"/>
+
+      <!-- Windows x86_64 -->
+      <enclosure
+        url="https://cdn.browseros.com/server/browserclaw_server_0.0.52_windows_x64.zip"
+        sparkle:os="windows"
+        sparkle:arch="x86_64"
+        sparkle:edSignature="p1WQ8qU6njfLjlEmlu38degzXlXJ2cPpE7q7Lum0KJ3QFfYQWmfO6gA0fyEJqFmEDML+6AuYjH4hU1tZ8BlbCQ=="
+        length="12421980"
+        type="application/zip"/>
+    </item>
+
+  </channel>
+</rss>

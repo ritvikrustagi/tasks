@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/ui/views/toolbar/BUILD.gn b/chrome/browser/ui/views/toolbar/BUILD.gn
+index f50374fe1c458cdc45b868b0bab77d897e3f2d8f..da39ad093ae240e3666cff7a095772ce3b0c1438 100644
+--- a/chrome/browser/ui/views/toolbar/BUILD.gn
++++ b/chrome/browser/ui/views/toolbar/BUILD.gn
+@@ -157,6 +157,8 @@ source_set("impl") {
+     ":toolbar",
+     "//base:i18n",
+     "//build:branding_buildflags",
++    "//chrome/browser/browseros/core:action_utils",
++    "//chrome/browser/browseros/core:prefs",
+     "//cc/paint",
+     "//chrome/app:branded_strings",
+     "//chrome/app:branded_strings_grit",

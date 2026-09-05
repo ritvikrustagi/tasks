@@ -1,0 +1,294 @@
+{
+  "mode": "deterministic-fixture-not-live",
+  "timingScope": "Entire local pipeline including controlled failure and resume; excludes Render queue and deployment",
+  "note": "Fixture runs verify behavior, not model quality or sponsor execution. No accuracy score inferred from citation validity.",
+  "observations": [
+    {
+      "case": "ordinary",
+      "input": {
+        "question": "Compare Zendesk and Intercom for a 12-person support team using official pricing and SSO documentation",
+        "brief": "SSO is required. Distinguish listed prices from sales-only pricing."
+      },
+      "expected": "Cited report, follow-up from stored evidence; recovery produces one report",
+      "actual": {
+        "id": "b3782b29-f0ff-44d4-997d-79212a939ae6",
+        "question": "Compare Zendesk and Intercom for a 12-person support team using official pricing and SSO documentation",
+        "brief": "SSO is required. Distinguish listed prices from sales-only pricing.",
+        "state": "succeeded",
+        "executor": "local",
+        "created": 1788633434051,
+        "updated": 1788633434053,
+        "error": null,
+        "runId": null,
+        "events": [
+          {
+            "step": "search",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "query": "Compare Zendesk and Intercom for a 12-person support team using official pricing and SSO documentation",
+              "sources": [
+                {
+                  "id": "fixture-source",
+                  "url": "https://example.com/pricing",
+                  "title": "Example vendor pricing",
+                  "content": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified."
+                }
+              ]
+            },
+            "error": null,
+            "updated": 1788633434053
+          },
+          {
+            "step": "investigate",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "plan": {
+                "findings": [
+                  {
+                    "text": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified.",
+                    "sources": [
+                      "fixture-source"
+                    ]
+                  }
+                ],
+                "gaps": [
+                  "Retention is unspecified"
+                ],
+                "query": "Example vendor official retention policy",
+                "reason": "Saved pricing evidence does not establish retention; verify the policy before recommending."
+              },
+              "usage": {
+                "model": "fixture-not-live",
+                "inputTokens": 100,
+                "outputTokens": 50,
+                "elapsedMs": 1
+              }
+            },
+            "error": null,
+            "updated": 1788633434053
+          },
+          {
+            "step": "followup",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "query": "Example vendor official retention policy",
+              "sources": [
+                {
+                  "id": "fixture-source",
+                  "url": "https://example.com/pricing",
+                  "title": "Example vendor pricing",
+                  "content": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified."
+                }
+              ]
+            },
+            "error": null,
+            "updated": 1788633434053
+          },
+          {
+            "step": "report",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "report": {
+                "title": "Vendor recommendation",
+                "summary": "Evaluate against: SSO is required. Distinguish listed prices from sales-only pricing.",
+                "findings": [
+                  {
+                    "text": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified.",
+                    "sources": [
+                      "fixture-source"
+                    ]
+                  }
+                ],
+                "uncertainties": [
+                  "Retention could not be verified."
+                ],
+                "nextActions": [
+                  "Ask vendor to confirm retention."
+                ]
+              },
+              "usage": {
+                "model": "fixture-not-live",
+                "inputTokens": 100,
+                "outputTokens": 50,
+                "elapsedMs": 1
+              }
+            },
+            "error": null,
+            "updated": 1788633434053
+          }
+        ]
+      },
+      "error": null,
+      "elapsedMs": 3,
+      "citationsValid": true,
+      "reportRecords": 1,
+      "followupRecorded": true,
+      "semanticQuality": "Requires human review of evidence against findings"
+    },
+    {
+      "case": "recovery",
+      "input": {
+        "question": "Compare Linear and Jira for a 20-person engineering team using official documentation",
+        "brief": "Need issue export and SSO; cite sources and unknowns."
+      },
+      "expected": "Cited report, follow-up from stored evidence; recovery produces one report",
+      "actual": {
+        "id": "7a5a6a48-3671-45d3-8b02-d2d64ecc586c",
+        "question": "Compare Linear and Jira for a 20-person engineering team using official documentation",
+        "brief": "Need issue export and SSO; cite sources and unknowns.",
+        "state": "succeeded",
+        "executor": "local",
+        "created": 1788633434060,
+        "updated": 1788633434079,
+        "error": null,
+        "runId": null,
+        "events": [
+          {
+            "step": "search",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "query": "Compare Linear and Jira for a 20-person engineering team using official documentation",
+              "sources": [
+                {
+                  "id": "fixture-source",
+                  "url": "https://example.com/pricing",
+                  "title": "Example vendor pricing",
+                  "content": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified."
+                }
+              ]
+            },
+            "error": null,
+            "updated": 1788633434078
+          },
+          {
+            "step": "investigate",
+            "state": "succeeded",
+            "attempts": 2,
+            "result": {
+              "plan": {
+                "findings": [
+                  {
+                    "text": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified.",
+                    "sources": [
+                      "fixture-source"
+                    ]
+                  }
+                ],
+                "gaps": [
+                  "Retention is unspecified"
+                ],
+                "query": "Example vendor official retention policy",
+                "reason": "Saved pricing evidence does not establish retention; verify the policy before recommending."
+              },
+              "usage": {
+                "model": "fixture-not-live",
+                "inputTokens": 100,
+                "outputTokens": 50,
+                "elapsedMs": 1
+              }
+            },
+            "error": null,
+            "updated": 1788633434079
+          },
+          {
+            "step": "followup",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "query": "Example vendor official retention policy",
+              "sources": [
+                {
+                  "id": "fixture-source",
+                  "url": "https://example.com/pricing",
+                  "title": "Example vendor pricing",
+                  "content": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified."
+                }
+              ]
+            },
+            "error": null,
+            "updated": 1788633434079
+          },
+          {
+            "step": "report",
+            "state": "succeeded",
+            "attempts": 1,
+            "result": {
+              "report": {
+                "title": "Vendor recommendation",
+                "summary": "Evaluate against: Need issue export and SSO; cite sources and unknowns.",
+                "findings": [
+                  {
+                    "text": "The team plan costs $20 per seat. SSO is only in Enterprise; retention is unspecified.",
+                    "sources": [
+                      "fixture-source"
+                    ]
+                  }
+                ],
+                "uncertainties": [
+                  "Retention could not be verified."
+                ],
+                "nextActions": [
+                  "Ask vendor to confirm retention."
+                ]
+              },
+              "usage": {
+                "model": "fixture-not-live",
+                "inputTokens": 100,
+                "outputTokens": 50,
+                "elapsedMs": 1
+              }
+            },
+            "error": null,
+            "updated": 1788633434079
+          }
+        ]
+      },
+      "error": null,
+      "elapsedMs": 25,
+      "citationsValid": true,
+      "reportRecords": 1,
+      "followupRecorded": true,
+      "semanticQuality": "Requires human review of evidence against findings"
+    },
+    {
+      "case": "difficult",
+      "input": {
+        "question": "Find the exact confidential negotiated enterprise price for a company that has never published it",
+        "brief": "Do not invent a price; state missing information."
+      },
+      "expected": "Explicit missing evidence, never an invented exact price",
+      "actual": {
+        "id": "b910378e-ac7b-4f1b-b760-8d0fbd462c4a",
+        "question": "Find the exact confidential negotiated enterprise price for a company that has never published it",
+        "brief": "Do not invent a price; state missing information.",
+        "state": "failed",
+        "executor": "local",
+        "created": 1788633434080,
+        "updated": 1788633434080,
+        "error": "Linkup returned no usable sources; revise the research question",
+        "runId": null,
+        "events": [
+          {
+            "step": "search",
+            "state": "failed",
+            "attempts": 1,
+            "result": null,
+            "error": "Linkup returned no usable sources; revise the research question",
+            "updated": 1788633434080
+          }
+        ]
+      },
+      "error": "Linkup returned no usable sources; revise the research question",
+      "elapsedMs": 0,
+      "citationsValid": false,
+      "reportRecords": 0,
+      "followupRecorded": false,
+      "semanticQuality": "Requires human review of evidence against findings"
+    }
+  ]
+}

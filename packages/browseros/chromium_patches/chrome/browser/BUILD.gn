@@ -1,0 +1,55 @@
+diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
+index bfc8555485593dc25c72fa74f20a70ce70ea6598..8c479f2beba1027310cf11cc458bfea1c4a58f81 100644
+--- a/chrome/browser/BUILD.gn
++++ b/chrome/browser/BUILD.gn
+@@ -13,6 +13,7 @@ import("//build/config/python.gni")
+ import("//build/config/ui.gni")
+ import("//chrome/browser/buildflags.gni")
+ import("//chrome/browser/downgrade/buildflags.gni")
++import("//chrome/browser/sparkle_buildflags.gni")
+ import("//chrome/common/features.gni")
+ import("//chrome/common/request_header_integrity/buildflags.gni")
+ import("//chrome/services/speech/buildflags/buildflags.gni")
+@@ -92,6 +93,8 @@ if (is_win) {
+ buildflag_header("buildflags") {
+   header = "buildflags.h"
+   flags = [
++    "ENABLE_SPARKLE=$enable_sparkle",
++    "ENABLE_WINSPARKLE=$enable_winsparkle",
+     "ENABLE_UPDATER=$enable_updater",
+     "ENABLE_UPDATE_NOTIFICATIONS=$enable_update_notifications",
+     "USE_MINIKIN_HYPHENATION=$use_minikin_hyphenation",
+@@ -1552,6 +1555,25 @@ source_set("core") {
+     ]
+   }
+ 
++  if (is_mac && enable_sparkle) {
++    sources += [ "mac/sparkle_glue.mm" ]
++    deps += [ "//chrome/browser/mac:sparkle_glue_headers" ]
++
++    # Headers config for compilation (linking handled by chrome_framework)
++    public_configs = [ "//third_party/sparkle:sparkle_link_framework" ]
++  }
++
++  if (is_win && enable_winsparkle) {
++    sources += [
++      "win/winsparkle_glue.cc",
++      "win/winsparkle_glue.h",
++    ]
++
++    # Link flags (import lib + /DELAYLOAD) propagate to every binary linking
++    # this target via all_dependent_configs on the group.
++    deps += [ "//third_party/winsparkle" ]
++  }
++
+   if (!is_win && !is_android) {
+     sources += [
+       "certificate_viewer_stub.cc",
+@@ -2076,6 +2098,7 @@ source_set("browser") {
+     "//chrome/browser/bookmarks",
+     "//chrome/browser/bookmarks:impl",
+     "//chrome/browser/breadcrumbs",
++    "//chrome/browser/browseros",
+     "//chrome/browser/browsing_data:constants",
+     "//chrome/browser/browsing_data:impl",
+     "//chrome/browser/browsing_topics",
