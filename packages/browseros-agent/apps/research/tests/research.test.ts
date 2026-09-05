@@ -266,8 +266,8 @@ test('real provider adapters use documented endpoints and reject invented citati
     'https://api.tokenfactory.nebius.com/v1/chat/completions',
   ])
   expect(bodies[0]).toEqual({
-    q: 'policy',
-    depth: 'standard',
+    q: expect.stringContaining('research request: policy'),
+    depth: 'deep',
     outputType: 'searchResults',
   })
 })

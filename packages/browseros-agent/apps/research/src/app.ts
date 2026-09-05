@@ -4,6 +4,7 @@ import { Hono } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { getCookie, setCookie } from 'hono/cookie'
 import { z } from 'zod'
+import { mountResearchMcp } from './mcp'
 import type { Providers } from './providers'
 import { runLocal } from './runner'
 import {
@@ -189,6 +190,9 @@ export function createResearchApp(
     }),
   )
   app.get('/api/brief', (c) => c.json({ text: store.brief(c.get('owner')) }))
+  app.get('/api/connector', (c) =>
+    c.json({ url: `${config.origin}/mcp/${c.get('owner')}` }),
+  )
   app.put('/api/brief', async (c) => {
     const { text } = z
       .object({ text: z.string().max(24000) })
@@ -296,5 +300,6 @@ export function createResearchApp(
     store.fail(c.req.param('id'), error)
     return c.json({ ok: true })
   })
+  mountResearchMcp(app, store, config.origin)
   return { app, drain: () => Promise.allSettled(jobs) }
 }

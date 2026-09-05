@@ -93,6 +93,14 @@ try {
   await page.waitForFunction(() =>
     document.body.textContent?.includes('Configured, not verified'),
   )
+  await page.click('details.original-brief summary')
+  assert(
+    await page.$eval(
+      'input[aria-label="Private BrowserOS connector URL"]',
+      (el, base) => (el as HTMLInputElement).value.startsWith(`${base}/mcp/`),
+      origin,
+    ),
+  )
   assert(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

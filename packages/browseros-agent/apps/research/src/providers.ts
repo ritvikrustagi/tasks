@@ -34,8 +34,8 @@ export function createProviders(config: Config, request: typeof fetch = fetch) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            q: query,
-            depth: 'standard',
+            q: `Find authoritative sources for this research request: ${query}. Find and read the relevant original pages. Return source URLs and the specific evidence needed to answer the request. Prefer official documentation and pricing pages when relevant. Say when requested information is unavailable.`,
+            depth: 'deep',
             outputType: 'searchResults',
           }),
           signal: AbortSignal.timeout(90000),
@@ -96,7 +96,7 @@ export function createProviders(config: Config, request: typeof fetch = fetch) {
       const sources = combinedSources(results)
       const outputShape =
         stage === 'investigate'
-          ? '{"findings":[{"text":"...","sources":["source id"]}],"gaps":["..."],"query":"one targeted follow-up web search","reason":"which stored evidence or missing fact requires this search"}'
+          ? '{"findings":[{"text":"...","sources":["source id"]}],"gaps":["..."],"query":"one targeted retrieval instruction naming what to find, preferred original sources, and facts to extract","reason":"which stored evidence or missing fact requires this search"}'
           : '{"title":"...","summary":"...","findings":[{"text":"...","sources":["source id"]}],"uncertainties":["..."],"nextActions":["..."]}'
       const started = Date.now()
       const data = await responseJson(

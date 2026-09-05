@@ -191,3 +191,52 @@ custom endpoints. See the desktop subscription guide for the tested path.
 - Access codes are a demo gate, not strong multi-tenant authentication. Before
   public launch add identity, quota enforcement, retention jobs, monitoring,
   backups, and independently audited browser action approvals.
+
+## Research from the original BrowserOS chat
+
+The research service now exposes authenticated MCP tools, so the existing
+BrowserOS chat and assistant panel can use the sponsor workflow without replacing
+that interface. The selected chat provider coordinates the conversation; Nebius
+still performs the workflow's gap analysis and report inference.
+
+1. Open the research service, sign in, and open **Connections**.
+2. Expand **Show private connector URL**. The URL grants access to this browser's
+   research session and expires with it, up to 30 days. Do not publish it in demo
+   material or include it in logs. Removing the app in BrowserOS disconnects that
+   client; it does not revoke a copied URL before the session expires.
+3. In BrowserOS open **Connect Apps > Add custom app**. Name it **Research** and
+   paste the URL. Custom apps are included automatically in new chat requests;
+   the inline app picker lists managed apps, so a second toggle is not needed.
+4. Start a new chat and ask: “Check research_status and tell me which services are
+   ready. Do not start research.” This makes a real connector call with no
+   Linkup/Nebius inference.
+5. For a live task, approve the question and context being processed by Linkup,
+   Nebius, and Render. Ask the assistant to save requirements with
+   `research_context`, start with `research_start`, and use `research_get` until
+   the cited report is available. Task IDs are UUIDs and must be reused when
+   retrying a start request. `research_action` supports stop and resume.
+
+The tools reuse the web API's readiness, consent, ownership, duplicate-request,
+stop and resume checks. MCP URLs do not expose provider API keys. Both legacy
+streamable HTTP and the current SDK discovery handler are mounted.
+
+### Verify the deployed workflow
+
+After the services are deployed and the controlled failure demo is enabled:
+
+```sh
+cd packages/browseros-agent/apps/research
+bun run evaluate:deployed
+```
+
+The command reads `RESEARCH_ORIGIN`, `RESEARCH_ACCESS_CODE`, and `RENDER_API_KEY`
+from the local environment or `.env`. It requires a public HTTPS origin, a ready
+Render executor, and failure-demo support before starting. It runs the shared
+ordinary/recovery/difficult cases through the same MCP endpoint used by the
+BrowserOS chat. It checks the Render run and child attempts, duplicate task and
+report counts, preservation of the initial search during recovery, and citation
+IDs. It writes private evidence to `test-results/deployed-*.json`, including
+inputs, outputs, full elapsed time, provider token usage, and Render run IDs.
+Review saved source content against each important claim before reporting output
+quality. A deliberate unavailable-information case can fail safely; do not
+present it as a successful research result.

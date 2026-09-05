@@ -254,6 +254,7 @@
     "apps/research": {
       "name": "@browseros/research",
       "dependencies": {
+        "@modelcontextprotocol/server": "^2.0.0",
         "@renderinc/sdk": "^1.0.0",
         "@tanstack/react-query": "^5.90.0",
         "hono": "^4.13.5",

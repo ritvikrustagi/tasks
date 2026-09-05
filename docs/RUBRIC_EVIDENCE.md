@@ -95,3 +95,31 @@ Paths prefixed `research/` are relative to `packages/browseros-agent/apps/`.
    support, and present the unavailable-information case even if it fails.
 7. Add deployed URLs, redacted run IDs, screenshots, and evaluation artifacts to
    this file. Only then update the corresponding rubric checkboxes.
+
+## Original BrowserOS chat integration (September 5, follow-up)
+
+- Added a session-authenticated Research MCP endpoint using the existing MCP
+  SDK. It reuses the research API for configuration, saved requirements, task
+  creation, progress/report retrieval, stop, and resume. No native chat layout
+  was replaced or restyled.
+- Connected it as a custom app in the existing installed BrowserOS application.
+  A real ChatGPT (Codex) conversation invoked `research_status` and accurately
+  reported that Linkup and Nebius were unconfigured and the executor was local.
+  This verifies native tool dispatch, not a live sponsor research run.
+- Focused research and MCP suite: 10 tests passed, 83 assertions. Includes
+  initialization/tool discovery, missing/expired credentials, cross-origin
+  denial, consent, cross-owner denial, duplicate start requests, saved context,
+  controlled failure/resume, one initial search, and one final report.
+- TypeScript and production build passed. The existing desktop/mobile UI smoke
+  passed with no page errors. Evidence continues to distinguish fixtures from
+  live provider output.
+- Added `evaluate:deployed` to run the same three representative inputs through
+  MCP on the real Render executor and collect remote run/child-attempt evidence.
+  It refuses to run against local execution or incomplete configuration. Its
+  live execution remains pending; source support must still be reviewed manually.
+- The packaged Research URL `https://ritvik-ai-browser.onrender.com` returned
+  HTTP 404 with `x-render-routing: no-server` during this check. No deployment
+  is claimed. This workspace contained no configured sponsor API credentials.
+- One accidentally broad root test invocation encountered missing dependencies
+  and unrelated monorepo failures; it is not a full-repository passing result.
+  The focused app checks above are the validated scope.

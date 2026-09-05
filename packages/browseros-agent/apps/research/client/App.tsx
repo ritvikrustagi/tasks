@@ -26,6 +26,7 @@ const keys = {
   config: ['config'],
   tasks: ['tasks'],
   brief: ['brief'],
+  connector: ['connector'],
 } as const
 async function api<T>(
   path: string,
@@ -86,6 +87,11 @@ export function App() {
     queryKey: keys.brief,
     queryFn: () => api<{ text: string }>('brief'),
     enabled: signedIn,
+  })
+  const connector = useQuery({
+    queryKey: keys.connector,
+    queryFn: () => api<{ url: string }>('connector'),
+    enabled: signedIn && view === 'connections',
   })
   const action = useMutation({
     mutationFn: ({ id, action }: { id: string; action: string }) =>
@@ -229,6 +235,27 @@ export function App() {
                 </div>
               ))}
             </div>
+            <h2>Use research in BrowserOS chat</h2>
+            <p className="privacy">
+              In BrowserOS, open Connect Apps, add a custom app named Research,
+              and paste this connector URL. Start a new chat to use the
+              connection. Your existing chat can then start research and
+              retrieve progress, sources, and reports here.
+            </p>
+            <details className="original-brief">
+              <summary>Show private connector URL</summary>
+              <p>
+                This link grants access to your research workspace for the life
+                of this session (up to 30 days). Keep it private.
+              </p>
+              <input
+                aria-label="Private BrowserOS connector URL"
+                readOnly
+                value={connector.data?.url ?? ''}
+                style={{ width: '100%', padding: 10 }}
+                onFocus={(e) => e.target.select()}
+              />
+            </details>
             <p className="privacy">
               Only the question and context you approve are sent for research.
               Linkup receives search queries; Nebius receives the brief and
@@ -236,7 +263,7 @@ export function App() {
               research also run on the configured cloud services. Website
               passwords and cookies are not attached.
             </p>
-            <ErrorText error={config.error} />
+            <ErrorText error={config.error ?? connector.error} />
           </div>
         ) : current ? (
           <div className="content">
