@@ -21,7 +21,7 @@ fn protocol_source_matches_pinned_chromium_input() -> Result<(), Box<dyn Error>>
     let surface: Value = serde_json::from_slice(SURFACE)?;
     assert_eq!(
         surface["domains"].as_array().map(Vec::len),
-        Some(9),
+        Some(10),
         "the compiled Rust surface should remain focused"
     );
     Ok(())
