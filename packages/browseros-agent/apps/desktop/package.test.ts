@@ -26,7 +26,7 @@ test('packaged extension retains native API identity without upstream extension 
   expect(packaged).toEqual({
     key: 'native-key',
     permissions: ['browserOS'],
-    name: 'AI Browser Assistant',
+    name: 'Bloom Search Assistant',
     version_name: 'Development alpha',
   })
   expect(original.update_url).toBe('https://vendor/update')

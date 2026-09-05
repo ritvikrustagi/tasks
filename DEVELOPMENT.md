@@ -1,6 +1,6 @@
-# DeepTrail Development
+# Bloom Search Development
 
-DeepTrail is an open-source BrowserOS-based browser foundation plus an
+Bloom Search is an open-source BrowserOS-based browser foundation plus an
 implemented research workspace, not a finished Aside replacement. See SPEC.md
 for the full product scope and docs/RUBRIC_EVIDENCE.md for what is actually
 verified.
@@ -36,7 +36,7 @@ consume credits. Resume reuses completed steps. Download exports Markdown.
 
 The desktop app download page is hosted at https://burning-token-psi.vercel.app
 in the Vercel project `burning-token`. The static site lives in `site/` and links
-to the Mac app archive in the `desktop-v0.1.0` GitHub release.
+to the Mac app archive in the `bloom-search-v0.1.2` GitHub release.
 `.github/workflows/deploy-vercel.yml` deploys changes to `site/` automatically
 when they reach `main`; the workflow
 can also be run manually from GitHub Actions. It uses the repository's encrypted

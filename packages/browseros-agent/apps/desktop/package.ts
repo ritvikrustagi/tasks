@@ -22,7 +22,7 @@ export function packagedManifest(manifest: Record<string, unknown>) {
   const { update_url: _upstreamUpdate, ...local } = manifest
   return {
     ...local,
-    name: 'AI Browser Assistant',
+    name: 'Bloom Search Assistant',
     version_name: 'Development alpha',
   }
 }
@@ -56,7 +56,7 @@ if (import.meta.main) {
   )
   const extension = resolve(import.meta.dir, '../app/dist/chrome-mv3')
   const destination = resolve(
-    process.env.DESKTOP_OUTPUT ?? `${root}/.context/desktop/AI Browser.app`,
+    process.env.DESKTOP_OUTPUT ?? `${root}/.context/desktop/Bloom Search.app`,
   )
   if (existsSync(destination))
     throw new Error(
@@ -138,30 +138,23 @@ if (import.meta.main) {
     '-mmacosx-version-min=14.0',
     `${import.meta.dir}/launcher.m`,
     '-o',
-    `${destination}/Contents/MacOS/AI Browser`,
+    `${destination}/Contents/MacOS/Bloom Search`,
   ])
-  const vendorInfo = Bun.spawnSync([
-    'plutil',
-    '-extract',
-    'CFBundleIconFile',
-    'raw',
-    '-o',
-    '-',
-    `${vendor}/Contents/Info.plist`,
+  await run([
+    'ditto',
+    resolve(import.meta.dir, 'bloom.icns'),
+    `${resources}/browser.icns`,
   ])
-  const iconName = vendorInfo.stdout.toString().trim()
-  const icon = `${vendor}/Contents/Resources/${iconName.endsWith('.icns') ? iconName : `${iconName}.icns`}`
-  if (existsSync(icon)) await run(['ditto', icon, `${resources}/browser.icns`])
   const plist = `${destination}/Contents/Info.plist`
   await Bun.write(
     plist,
     JSON.stringify({
-      CFBundleName: 'AI Browser',
-      CFBundleDisplayName: 'AI Browser',
-      CFBundleExecutable: 'AI Browser',
+      CFBundleName: 'Bloom Search',
+      CFBundleDisplayName: 'Bloom Search',
+      CFBundleExecutable: 'Bloom Search',
       CFBundleIdentifier: 'dev.aibrowser.launcher',
-      CFBundleVersion: '1',
-      CFBundleShortVersionString: '0.1.0',
+      CFBundleVersion: '3',
+      CFBundleShortVersionString: '0.1.2',
       CFBundlePackageType: 'APPL',
       CFBundleIconFile: 'browser.icns',
       LSMinimumSystemVersion: '14.0',
