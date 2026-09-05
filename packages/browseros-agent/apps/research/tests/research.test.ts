@@ -46,7 +46,7 @@ describe('research execution', () => {
     const task = store.get(input.id)!
     expect(task.state).toBe('succeeded')
     expect(calls).toEqual([
-      'search:Compare support tools for a small team',
+      'search:Compare support tools for a small team\nRequirements to verify: SSO required; retention under 30 days',
       'infer:investigate',
       'search:Example vendor official retention policy',
       'infer:report',

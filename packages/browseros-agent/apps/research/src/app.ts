@@ -36,7 +36,7 @@ const safeEqual = (a: string, b: string) => {
   return left.length === right.length && timingSafeEqual(left, right)
 }
 const resultSchema = z.object({
-  query: z.string().max(2000).optional(),
+  query: z.string().max(28000).optional(),
   sources: z.array(sourceSchema).max(24).optional(),
   plan: planSchema.optional(),
   report: reportSchema.optional(),

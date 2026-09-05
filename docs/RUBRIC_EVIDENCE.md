@@ -152,3 +152,43 @@ This supersedes the earlier account-availability observations above.
 - Credential-free raw observations are retained in the ignored
   `.context/sponsor-connection-check.json` and
   `.context/nebius-inference-check.json` files.
+
+## Replacement Linkup key and live pipeline evaluation
+
+The replacement key supplied later on September 5 authenticated with a $19.94
+Linkup balance. It is stored only in the gitignored local environment and private
+deployment configuration. This supersedes the zero-balance blocker above.
+
+All three representative cases completed with actual Linkup and Nebius calls.
+The first run exposed that initial retrieval omitted the saved requirements;
+initial searches now include the complete brief. The worker checkpoint query
+limit accommodates the existing question and brief limits. Retrieval and model
+instructions also require closer source support, explicit billing periods, and
+distinguishing official documentation from third-party claims.
+
+After these changes, the repeated local evaluation recorded:
+
+| Case | Pipeline time | Nebius input/output tokens | Mechanical outcome |
+| --- | --- | --- | --- |
+| Ordinary comparison | 48.096 s | 19,091 / 1,879 | Four steps completed, follow-up recorded, one report, valid citation IDs |
+| Failure/recovery | 49.046 s | 20,977 / 2,003 | Initial search ran once; investigation ran twice; one final report |
+| Unavailable confidential price | 31.979 s | 19,626 / 1,423 | Completed with missing-information disclosure; no exact price fabricated |
+
+These are local execution measurements, not Render Workflows evidence. Across
+both runs the Linkup balance declined from $19.94 to $19.34 (twelve deep searches).
+Nebius token counts are measured; account-level inference cost is not verified.
+
+Semantic review remains a limitation. The ordinary comparison still retrieved
+third-party sources despite requesting official documentation and incorrectly
+called an SSO guide official. It also made an unsupported all-plan eligibility
+claim. The recovery case retrieved official Linear pricing but lacked adequate
+official Jira coverage. The difficult case avoided inventing a price while making
+overbroad confidentiality claims. Citation-ID validity is not factual accuracy;
+these outputs are not a passing accuracy evaluation or a claim of rubric completion.
+
+The focused suite passes 10 tests / 83 assertions, including the saved-brief
+retrieval regression; TypeScript and scoped Biome checks pass. Full inputs,
+sources, plans, reports, timings, and review notes are retained privately in
+`.context/live-research-evaluation.json` and
+`.context/live-research-evaluation-v2.json`. Render creation remains blocked by
+HTTP 402 requiring workspace payment information.
