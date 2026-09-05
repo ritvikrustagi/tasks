@@ -153,6 +153,28 @@ a:hover {
   font-size: 11px;
   color: #728076;
 }
+.built-with {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #929c96;
+}
+.built-with a {
+  display: inline-flex;
+  opacity: 0.75;
+}
+.built-with a:hover {
+  opacity: 1;
+}
+.built-with img {
+  display: block;
+  width: auto;
+  height: 18px;
+}
 .version {
   font-size: 9px;
   margin-left: auto;
