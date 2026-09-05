@@ -4,9 +4,9 @@ export const steps = ['search', 'investigate', 'followup', 'report'] as const
 export type Step = (typeof steps)[number]
 export const stepLabels: Record<Step, string> = {
   search: 'Search the web · Linkup',
-  investigate: 'Review saved evidence',
+  investigate: 'Review saved evidence · Nebius',
   followup: 'Search the missing information · Linkup',
-  report: 'Complete the task',
+  report: 'Write the report · Nebius',
 }
 export const taskInput = z.object({
   id: z.string().uuid(),
@@ -58,7 +58,13 @@ export type Usage = {
   outputTokens: number
   elapsedMs: number
 }
+export const providerResponseSchema = z.object({
+  provider: z.enum(['linkup', 'nebius']),
+  completedAt: z.number().nonnegative(),
+  elapsedMs: z.number().nonnegative(),
+})
 export type Result = {
+  providerResponse?: z.infer<typeof providerResponseSchema>
   sources?: Source[]
   query?: string
   plan?: z.infer<typeof planSchema>

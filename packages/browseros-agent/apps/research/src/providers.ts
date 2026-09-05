@@ -26,6 +26,7 @@ export function createProviders(config: Config, request: typeof fetch = fetch) {
   return {
     async search(query: string): Promise<Result> {
       if (!config.linkupKey) throw new Error('Linkup is not connected')
+      const started = Date.now()
       const data = await responseJson(
         await request('https://api.linkup.so/v1/search', {
           method: 'POST',
@@ -83,7 +84,18 @@ export function createProviders(config: Config, request: typeof fetch = fetch) {
         throw new Error(
           'Linkup returned no usable sources; revise the research question',
         )
-      return { query, sources: combinedSources([{ sources }]) }
+      return {
+        query,
+        sources: combinedSources([{ sources }]),
+        providerResponse:
+          request === fetch
+            ? {
+                provider: 'linkup',
+                completedAt: Date.now(),
+                elapsedMs: Date.now() - started,
+              }
+            : undefined,
+      }
     },
     async infer(
       stage: 'investigate' | 'report',
@@ -152,16 +164,24 @@ export function createProviders(config: Config, request: typeof fetch = fetch) {
         outputTokens: parsed.usage.completion_tokens,
         elapsedMs: Date.now() - started,
       }
+      const providerResponse: Result['providerResponse'] =
+        request === fetch
+          ? {
+              provider: 'nebius',
+              completedAt: Date.now(),
+              elapsedMs: usage.elapsedMs,
+            }
+          : undefined
       if (stage === 'investigate') {
         const plan = planSchema.parse(value)
         validateCitations(plan.findings, sources)
         if (plan.query.toLowerCase().trim() === question.toLowerCase().trim())
           throw new Error('Follow-up search repeats the original question')
-        return { plan, usage }
+        return { plan, usage, providerResponse }
       }
       const report = reportSchema.parse(value)
       validateCitations(report.findings, sources)
-      return { report, usage }
+      return { report, usage, providerResponse }
     },
   }
 }

@@ -50,6 +50,25 @@ bun run start
 
 Open `http://127.0.0.1:4318`.
 
+To see a Nebius report, open this research workspace, start a task, and wait for
+**Write the report · Nebius** to succeed. The final answer is labeled **Nebius
+report**. The **Integration activity** panel beside the steps links directly to
+it and can be collapsed for normal use. On smaller screens it appears above
+the steps.
+
+The panel updates from saved backend activity every two seconds: Linkup queries
+and source counts, Nebius model and input/output tokens, successful response
+times, step attempts and errors, and the Render run ID when dispatch is recorded.
+**Download activity and evidence (JSON)** saves the same evidence for inspection.
+Local runs explicitly show that Render was not used. Fixtures and older results
+without response metadata are not labeled as live responses. Usage covers saved
+successful responses; retries can incur additional usage.
+
+The BrowserOS chat window with ChatGPT or Claude selected is a separate flow;
+its answers are not Nebius research reports. Render is used only when the
+research backend runs with `RESEARCH_EXECUTOR=render` and a deployed Workflow
+service; see `DEVELOPMENT.md`.
+
 For live research, add a `.env` in `packages/browseros-agent/apps/research/` with `LINKUP_API_KEY`, `NEBIUS_API_KEY`, and `NEBIUS_MODEL`.
 
 ## Verify
