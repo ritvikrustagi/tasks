@@ -1,6 +1,6 @@
-# DeepTrail
+# Bloom Search
 
-DeepTrail is our hackathon project: a research browser that tries to give you an actual sourced answer instead of a pile of tabs.
+Bloom Search is our hackathon project: a research browser that tries to give you an actual sourced answer instead of a pile of tabs.
 
 You give it a question and a short brief. It searches, saves what it found, looks for gaps, searches again, and writes a cited report.
 
@@ -10,7 +10,7 @@ The browser shell is still alpha. The main thing we are showing is the deep rese
 
 This is the part that maps to the rubric:
 
-| Connection | Role in DeepTrail | Current status |
+| Connection | Role in Bloom Search | Current status |
 | --- | --- | --- |
 | Linkup | Finds sources and does the follow-up search after we know what is missing. | Built with fixture tests. Needs live credits/key for the demo. |
 | Nebius | Reads the brief and evidence, finds gaps, and writes the report. | Built with token tracking. Needs live model evaluation. |
@@ -30,7 +30,7 @@ This is the part that maps to the rubric:
 
 | Path | Purpose |
 | --- | --- |
-| `packages/browseros-agent/apps/research/` | The actual DeepTrail app. |
+| `packages/browseros-agent/apps/research/` | The actual Bloom Search app. |
 | `site/` | The simple landing page. |
 | `OVERALL_RUBRIC.md` | The rubric we are trying to hit. |
 | `docs/RUBRIC_EVIDENCE.md` | What is real vs. what still needs live proof. |

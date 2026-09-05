@@ -5,7 +5,7 @@ live evidence exists. Implementation is not the same as a verified connection.
 
 ## Product
 
-Product: DeepTrail.
+Product: Bloom Search.
 User: a small team's operator evaluating software for specific requirements.
 Task: combine their requirements brief with current public documentation and
 return a cited comparison, missing information, and practical next actions.

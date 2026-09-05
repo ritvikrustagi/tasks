@@ -101,10 +101,10 @@ export function App() {
   return (
     <div className="shell">
       <aside className="rail">
-        <a className="brand" href="/" aria-label="DeepTrail research home">
+        <a className="brand" href="/" aria-label="Bloom Search research home">
           <Globe2 />
           <span>
-            DeepTrail<span className="brand-sub">RESEARCH WORKSPACE</span>
+            Bloom Search<span className="brand-sub">RESEARCH WORKSPACE</span>
           </span>
         </a>
         <button

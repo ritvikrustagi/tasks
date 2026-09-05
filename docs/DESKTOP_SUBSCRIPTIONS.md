@@ -1,9 +1,9 @@
-# Desktop subscription setup
+# Bloom Search desktop setup
 
 Verified locally on September 5, 2026.
 
-Open `~/Applications/AI Browser.app`. Click **Assistant** in the browser toolbar
-(the accessibility label is **Ask BrowserOS**) to open the task sidebar. Its
+Open `Bloom Search.app` from your Applications folder. Click **Assistant** in the browser toolbar
+(the accessibility label is **Ask Bloom Search**) to open the task sidebar. Its
 provider menu offers **Claude (subscription)** and **ChatGPT (Codex)**. Both use
 existing native CLI subscription sign-ins; no API key was entered for this setup.
 The user approved the native connectors' command execution and file access.
@@ -49,3 +49,12 @@ The baked Render research URL is a separate service and was not deployed or
 validated by these tests. These two tasks establish basic desktop integration;
 they do not establish full Aside parity or completion of the original CLI's
 three broader acceptance tasks.
+
+## Bloom Search branding release
+
+Version 0.1.1 renames the launcher, assistant, tabs, and app icons to Bloom Search.
+It repackages the verified v3 runtime without changing browser or server behavior.
+The existing `AI Browser/Profile` data path is retained so the rebrand does not
+reset saved conversations, provider connections, or browser sessions. Native
+BrowserOS internals and license notices remain those of the bundled upstream
+runtime; the launcher remains ad-hoc signed, not Apple-notarized.

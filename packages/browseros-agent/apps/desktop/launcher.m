@@ -2,7 +2,7 @@
 
 static void fail(NSString *message) {
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"AI Browser could not start";
+    alert.messageText = @"Bloom Search could not start";
     alert.informativeText = message;
     alert.alertStyle = NSAlertStyleCritical;
     [alert addButtonWithTitle:@"OK"];
@@ -19,7 +19,7 @@ int main(int argc, const char *argv[]) {
         NSURL *resources = bundle.resourceURL;
         NSString *origin = [bundle objectForInfoDictionaryKey:@"ResearchOrigin"];
         if (!resources || ![[NSURL URLWithString:origin].scheme isEqualToString:@"https"]) {
-            fail(@"The application package is incomplete. Rebuild or reinstall AI Browser.");
+            fail(@"The application package is incomplete. Rebuild or reinstall Bloom Search.");
         }
         NSURL *browser = [resources URLByAppendingPathComponent:@"BrowserOS.app"];
         NSString *extension = [resources URLByAppendingPathComponent:@"extension"].path;
