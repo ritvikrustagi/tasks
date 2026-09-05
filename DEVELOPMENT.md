@@ -1,8 +1,9 @@
-# AI Browser Development
+# DeepTrail Development
 
-This is an open-source BrowserOS-based browser foundation plus an implemented
-research workspace, not a finished Aside replacement. See SPEC.md for the full
-product scope and docs/RUBRIC_EVIDENCE.md for what is actually verified.
+DeepTrail is an open-source BrowserOS-based browser foundation plus an
+implemented research workspace, not a finished Aside replacement. See SPEC.md
+for the full product scope and docs/RUBRIC_EVIDENCE.md for what is actually
+verified.
 
 ## Research workspace
 
