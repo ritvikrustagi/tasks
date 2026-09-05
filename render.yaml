@@ -31,6 +31,8 @@ services:
         sync: false
       - key: NEBIUS_MODEL
         sync: false
+      - key: NEBIUS_VISION_MODEL
+        sync: false
       - key: RENDER_API_KEY
         sync: false
       - key: RENDER_WORKFLOW_SLUG

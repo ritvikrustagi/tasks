@@ -18,9 +18,11 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { type FormEvent, useRef, useState } from 'react'
+import { type FormEvent, lazy, Suspense, useRef, useState } from 'react'
 import { combinedSources, type Task } from '../src/schema'
 import { ResearchSteps } from './ResearchSteps'
+
+const Offload = lazy(() => import('./offload/Offload'))
 
 const keys = {
   health: ['health'],
@@ -57,7 +59,17 @@ export function App() {
   const client = useQueryClient()
   const [signedIn, setSignedIn] = useState(false),
     [selected, setSelected] = useState<string | null>(null),
-    [view, setView] = useState<'research' | 'connections'>('research')
+    [view, setView] = useState<'research' | 'connections' | 'offload'>(
+      'research',
+    )
+  const [selectedScan, setSelectedScan] = useState<string | null>(null)
+  const scans = useQuery({
+    queryKey: ['offload-jobs'],
+    queryFn: () =>
+      api<{ id: string; title: string; state: string }[]>('offload/jobs'),
+    enabled: signedIn,
+    refetchInterval: signedIn ? 2500 : false,
+  })
   const [notice, setNotice] = useState('')
   const health = useQuery({
     queryKey: keys.health,
@@ -132,9 +144,20 @@ export function App() {
           >
             <Settings2 size={17} /> Connections
           </button>
+          <button
+            type="button"
+            className={view === 'offload' ? 'nav active' : 'nav'}
+            onClick={() => {
+              setSelectedScan(null)
+              setView('offload')
+            }}
+          >
+            <Plus size={17} /> Sell my stuff
+          </button>
         </nav>
         <div className="section-label">
-          RECENT TASKS <span>{tasks.data?.length ?? 0}</span>
+          RECENT TASKS{' '}
+          <span>{(tasks.data?.length ?? 0) + (scans.data?.length ?? 0)}</span>
         </div>
         <div className="task-list">
           {tasks.data?.map((t) => (
@@ -151,7 +174,24 @@ export function App() {
               <span>{t.question}</span>
             </button>
           ))}
-          {signedIn && !tasks.data?.length && (
+          {scans.data?.map((scan) => (
+            <button
+              type="button"
+              key={scan.id}
+              className={`task-item ${selectedScan === scan.id && view === 'offload' ? 'selected' : ''}`}
+              onClick={() => {
+                setSelectedScan(scan.id)
+                setView('offload')
+              }}
+            >
+              <span aria-label={scan.state}>◇</span>
+              <span>
+                {scan.title}
+                <small> · {scan.state}</small>
+              </span>
+            </button>
+          ))}
+          {signedIn && !tasks.data?.length && !scans.data?.length && (
             <p className="empty-small">No research yet</p>
           )}
         </div>
@@ -167,7 +207,11 @@ export function App() {
         <header className="topbar">
           <span>
             <Globe2 size={15} /> Workspace <span className="slash">/</span>{' '}
-            {view === 'connections' ? 'Connections' : 'Research'}
+            {view === 'connections'
+              ? 'Connections'
+              : view === 'offload'
+                ? 'Sell my stuff'
+                : 'Research'}
           </span>
           <span className="tag">Open source</span>
         </header>
@@ -204,6 +248,12 @@ export function App() {
               <ErrorText error={login.error ?? health.error} />
             </form>
           </div>
+        ) : view === 'offload' ? (
+          <Suspense
+            fallback={<p className="content">Opening selling workspace…</p>}
+          >
+            <Offload scanId={selectedScan} />
+          </Suspense>
         ) : view === 'connections' ? (
           <div className="content">
             <div className="eyebrow">WORKSPACE SETTINGS</div>

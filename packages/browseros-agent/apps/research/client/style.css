@@ -741,3 +741,19 @@ section li {
 .sources details[open] summary > svg {
   transform: rotate(180deg);
 }
+@media (max-width: 640px) {
+  .rail nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+  }
+  .rail .nav {
+    min-width: 0;
+    font-size: 12px;
+    padding: 8px 5px;
+    gap: 4px;
+  }
+  .rail .nav svg {
+    flex-shrink: 0;
+  }
+}

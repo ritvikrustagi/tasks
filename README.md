@@ -4,6 +4,8 @@ DeepTrail is our hackathon project: a research browser that tries to give you an
 
 You give it a question and a short brief. It searches, saves what it found, looks for gaps, searches again, and writes a cited report.
 
+The **Sell my stuff** task also turns photos/video into researched listing drafts, with editable prices, a simulated selling desk, and pickup reservations. See [Offload integration](docs/OFFLOAD.md).
+
 The browser shell is still alpha. The main thing we are showing is the deep research workflow.
 
 ## Hackathon Connections

@@ -1,3 +1,7 @@
+import { createOffloadProviders } from './offload/providers'
+import { executeOffloadStep } from './offload/runner'
+import type { Draft } from './offload/pipeline-contract'
+import type { JobContext } from './offload/store'
 import { type TaskContext, task } from '@renderinc/sdk/workflows'
 import { createProviders, executeStep } from './providers'
 import { type Result, type Step, steps, type Task } from './schema'
@@ -95,6 +99,85 @@ export const research = task(
           'Workflow step failed after retries; saved evidence is retained. Review the step and resume.',
       })
       throw error
+    }
+  },
+)
+
+const sellingProviders = createOffloadProviders(providers.search)
+const offloadStep = task(
+  {
+    name: 'offload-step',
+    retry: { maxRetries: 2, waitDurationMs: 3000, backoffScaling: 2 },
+    timeoutSeconds: 180,
+  },
+  async (_ctx: TaskContext, id: string, step: string): Promise<unknown> => {
+    if (
+      !/^[a-f0-9-]{36}$/.test(id) ||
+      !/^(identify|validate|publish|search-[0-3]-[12]|ground-[0-3])$/.test(step)
+    )
+      throw new Error('Invalid scan step')
+    const path = `/internal/offload/${id}`
+    const claim = (await checkpoint(`${path}/claim/${step}`)) as {
+      cached: boolean
+      result?: unknown
+      context?: JobContext
+      lease?: string
+    }
+    if (claim.cached) return claim.result
+    if (!claim.context || !claim.lease)
+      throw new Error('Invalid scan checkpoint')
+    try {
+      const result = await executeOffloadStep(
+        sellingProviders,
+        claim.context,
+        step,
+      )
+      await checkpoint(`${path}/finish/${step}`, {
+        lease: claim.lease,
+        result,
+        error: null,
+      })
+      return result
+    } catch (error) {
+      try {
+        await checkpoint(`${path}/finish/${step}`, {
+          lease: claim.lease,
+          result: null,
+          error:
+            error instanceof Error
+              ? error.message.slice(0, 1000)
+              : 'Scan failed',
+        })
+      } catch {
+        /* Committed results and cancellation win. */
+      }
+      throw error
+    }
+  },
+)
+export const offload = task(
+  {
+    name: 'offload',
+    retry: { maxRetries: 0, waitDurationMs: 1000 },
+    timeoutSeconds: 3600,
+  },
+  async (ctx: TaskContext, id: string) => {
+    if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('Invalid scan ID')
+    try {
+      await ctx.run(offloadStep, id, 'identify')
+      const drafts = (await ctx.run(offloadStep, id, 'validate')) as Draft[]
+      for (let i = 0; i < drafts.length; i++) {
+        await ctx.run(offloadStep, id, `search-${i}-1`)
+        await ctx.run(offloadStep, id, `search-${i}-2`)
+        await ctx.run(offloadStep, id, `ground-${i}`)
+      }
+      await ctx.run(offloadStep, id, 'publish')
+      return { jobId: id, state: 'completed' }
+    } catch {
+      await checkpoint(`/internal/offload/${id}/fail`, {
+        error: 'Scan failed after workflow retries; resume from saved steps.',
+      })
+      throw new Error('Offload workflow failed')
     }
   },
 )

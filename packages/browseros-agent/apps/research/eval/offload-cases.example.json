@@ -1,0 +1,10 @@
+{
+  "cases": [
+    { "id": "single-chair", "files": ["inputs/chair.jpg"], "expectedObjects": ["chair"], "notes": "One isolated item in good lighting." },
+    { "id": "three-dorm-items", "files": ["inputs/three-items.jpg"], "expectedObjects": ["chair", "lamp", "speaker"], "notes": "Three distinct objects in one frame." },
+    { "id": "repeated-views", "files": ["inputs/chair-front.jpg", "inputs/chair-side.jpg"], "expectedObjects": ["chair"], "notes": "Two views of the same chair; should produce one listing." },
+    { "id": "clutter-occlusion", "files": ["inputs/clutter.jpg"], "expectedObjects": ["lamp", "speaker"], "notes": "Partial occlusion; manually inspect misses and hallucinations." },
+    { "id": "ambiguous-model", "files": ["inputs/speaker-no-label.jpg"], "expectedObjects": ["speaker"], "notes": "Model label not visible. Expected model=null and a confirmation warning." },
+    { "id": "failure-recovery", "files": ["inputs/three-items.jpg"], "expectedObjects": ["chair", "lamp", "speaker"], "controlledFailure": true, "notes": "Demonstrate failure after durable save and exactly one saved record per item after retry." }
+  ]
+}

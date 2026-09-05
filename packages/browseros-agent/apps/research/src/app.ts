@@ -4,6 +4,14 @@ import { Hono } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { getCookie, setCookie } from 'hono/cookie'
 import { z } from 'zod'
+import {
+  createOffloadProviders,
+  offloadConfig,
+  type OffloadConfig,
+  type OffloadProviders,
+} from './offload/providers'
+import { OffloadStore } from './offload/store'
+import { registerOffload } from './offload/routes'
 import type { Providers } from './providers'
 import { runLocal } from './runner'
 import {
@@ -16,6 +24,9 @@ import {
   taskInput,
 } from './schema'
 import type { ResearchStore } from './store'
+
+export const contentSecurityPolicy =
+  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 
 export type AppConfig = {
   origin: string
@@ -53,6 +64,7 @@ export function createResearchApp(
   store: ResearchStore,
   providers: Providers,
   config: AppConfig,
+  offload?: { providers: OffloadProviders; config: OffloadConfig },
 ) {
   const app = new Hono<{ Variables: { owner: string } }>()
   const jobs = new Set<Promise<void>>()
@@ -92,7 +104,7 @@ export function createResearchApp(
     void work.finally(() => jobs.delete(work))
   }
 
-  app.use('*', bodyLimit({ maxSize: 1024 * 1024 }))
+  app.use('*', bodyLimit({ maxSize: 4 * 1024 * 1024 }))
   app.use('*', async (c, next) => {
     c.header('Cache-Control', 'no-store')
     c.header('X-Content-Type-Options', 'nosniff')
@@ -303,5 +315,14 @@ export function createResearchApp(
     store.fail(c.req.param('id'), error)
     return c.json({ ok: true })
   })
+  registerOffload(
+    app,
+    new OffloadStore(store.db),
+    offload?.providers ?? createOffloadProviders(providers.search),
+    offload?.config ?? offloadConfig(),
+    config,
+    render,
+    jobs,
+  )
   return { app, drain: () => Promise.allSettled(jobs) }
 }

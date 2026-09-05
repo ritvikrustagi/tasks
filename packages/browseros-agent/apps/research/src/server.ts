@@ -1,5 +1,5 @@
 import { serveStatic } from 'hono/bun'
-import { type AppConfig, createResearchApp } from './app'
+import { type AppConfig, createResearchApp, contentSecurityPolicy } from './app'
 import { createProviders } from './providers'
 import { ResearchStore } from './store'
 
@@ -36,12 +36,10 @@ const providers = createProviders({
 })
 const { app } = createResearchApp(store, providers, config)
 app.use('*', async (c, next) => {
-  c.header(
-    'Content-Security-Policy',
-    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
-  )
+  c.header('Content-Security-Policy', contentSecurityPolicy)
   await next()
 })
+app.use('/offload-samples/*', serveStatic({ root: './dist' }))
 app.use('/assets/*', serveStatic({ root: './dist' }))
 app.get('/favicon.ico', (c) => c.body(null, 204))
 app.get('/', serveStatic({ path: './dist/index.html' }))

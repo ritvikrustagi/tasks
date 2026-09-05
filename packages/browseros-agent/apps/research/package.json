@@ -11,7 +11,9 @@
     "test": "bun test tests",
     "test:ui": "bun tests/ui.ts",
     "evaluate": "bun tests/evaluate.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:offload-ui": "bun tests/offload-ui.ts",
+    "evaluate:offload": "bun scripts/evaluate-offload.ts"
   },
   "dependencies": {
     "@renderinc/sdk": "^1.0.0",
