@@ -6,8 +6,8 @@ reliably complete every supported task. Last updated: 2026-09-05.
 
 ## Product Architecture
 
-The Mac runs BrowserOS/Chromium with an isolated AI Browser profile and our
-assistant extension. Render hosts approved research jobs, not the user's
+The Mac runs BrowserOS/Chromium with an isolated AI Browser profile, our
+assistant extension, and a matching locally compiled agent server. Render hosts approved research jobs, not the user's
 logged-in browser. The desktop remains usable for ordinary browsing while
 research services are unavailable. Linkup and Nebius keys belong on the server,
 never inside the downloadable application.

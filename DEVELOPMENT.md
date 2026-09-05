@@ -117,7 +117,7 @@ Chrome cookies/passwords or enable remote debugging. The vendor signature is
 verified; only the new launcher is ad-hoc signed. This is not a notarized
 independent release. Do not bypass macOS security warnings to distribute it.
 
-The locally smoke-tested artifact is `.context/desktop-v2/AI Browser.app`.
+The desktop artifact is `.context/desktop-v3/AI Browser.app`.
 Its Research link targets `https://ritvik-ai-browser.onrender.com`, which is
 **not deployed yet**. Ordinary browser and settings UI were checked; live
 provider login and agent execution were not. Allow the local agent server to
@@ -125,6 +125,18 @@ finish starting: ChatGPT and Claude Code appear once its capabilities load.
 ChatGPT's connection button opened the real OpenAI sign-in page in this isolated
 profile. Completing sign-in and a real task remain user-dependent acceptance
 steps. See `docs/ASIDE_PARITY.md` for the remaining release gates.
+
+The packager builds the matching agent server with the upstream `--ci` build
+mode, adds its current database migrations, and retains vendor third-party
+runtime assets. The launcher's `--browseros-server-resources-dir` points to this
+separate payload without altering the signed browser. CI mode does not include
+production BrowserOS service credentials; bring your own model provider.
+Version-matching matters: the initial vendor-only package opened OAuth but
+failed to load providers against the newer assistant's API.
+
+On the first launch, the initial tab can open before the assistant registers
+its new-tab override. Opening another new tab loads the assistant. Startup
+sequencing still needs polish before distributing this as a daily-use browser.
 
 ### Upstream runtime
 

@@ -81,6 +81,38 @@ if (import.meta.main) {
     '--strict',
     `${resources}/BrowserOS.app`,
   ])
+  // Build the matching server; the downloaded browser can bundle an older API.
+  const serverBuild = Bun.spawn(
+    [
+      process.execPath,
+      'scripts/build/server.ts',
+      '--target',
+      'darwin-arm64',
+      '--ci',
+    ],
+    {
+      cwd: resolve(import.meta.dir, '../..'),
+      stdout: 'inherit',
+      stderr: 'inherit',
+    },
+  )
+  if (await serverBuild.exited)
+    throw new Error('Local agent server build failed')
+  await run([
+    'ditto',
+    `${vendor}/Contents/Resources/BrowserOSServer/default/resources`,
+    `${resources}/server/resources`,
+  ])
+  await run([
+    'ditto',
+    '-x',
+    '-k',
+    resolve(
+      import.meta.dir,
+      '../../dist/prod/server/browseros-server-resources-darwin-arm64.zip',
+    ),
+    `${resources}/server`,
+  ])
   const build = Bun.spawn([process.execPath, 'run', 'build'], {
     cwd: resolve(import.meta.dir, '../app'),
     env: { ...process.env, VITE_RESEARCH_URL: origin },

@@ -51,12 +51,21 @@ Paths prefixed `research/` are relative to `packages/browseros-agent/apps/`.
 - Latest focused suite: 13 tests / 51 assertions passed across research,
   desktop packaging validation, and provider presets. Objective-C launcher
   compilation and deep/strict package signature verification passed.
+- Desktop v3 builds the matching local server (0.0.155), fixing the initial
+  vendor-server/provider API mismatch. In native UI the default provider loaded
+  and the composer enabled after opening a new tab. First-start new-tab
+  registration polish remains. Subscription/sidebar tests are delegated to the
+  user's Tunis workspace; they are not yet recorded as passing here.
 - Latest upstream full test suite: two failures, missing Go executable and
   CDP startup timeout in server integration. The earlier native-addon failure
   did not recur. Logs: `.context/predeploy-test.log`; `check` exited zero with
   warnings in `.context/predeploy-check.log`.
 - No sponsor credentials used; no deployed Workflows run or live inference
   quality evidence has been claimed.
+- Source branch published to `ritvikrustagi/tasks:build-aside-ai-browser`.
+  Staged-file audit excluded credentials, profiles, local artifacts, and
+  databases. Gitleaks flagged 11 unchanged public-upstream entries, not new
+  account secrets; the redacted report is in `.context/staged-secrets-redacted.json`.
 
 ## Account and Deployment Check
 

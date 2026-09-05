@@ -23,9 +23,11 @@ int main(int argc, const char *argv[]) {
         }
         NSURL *browser = [resources URLByAppendingPathComponent:@"BrowserOS.app"];
         NSString *extension = [resources URLByAppendingPathComponent:@"extension"].path;
+        NSString *server = [resources URLByAppendingPathComponent:@"server/resources"].path;
         NSFileManager *files = NSFileManager.defaultManager;
         if (![files fileExistsAtPath:browser.path] ||
-            ![files fileExistsAtPath:[extension stringByAppendingPathComponent:@"manifest.json"]]) {
+            ![files fileExistsAtPath:[extension stringByAppendingPathComponent:@"manifest.json"]] ||
+            ![files fileExistsAtPath:[server stringByAppendingPathComponent:@"bin/browseros_server"]]) {
             fail(@"The bundled browser or assistant extension is missing. Reinstall the complete application.");
         }
         NSURL *support = [files URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask].firstObject;
@@ -40,6 +42,7 @@ int main(int argc, const char *argv[]) {
         config.arguments = @[
             [@"--user-data-dir=" stringByAppendingString:profile.path],
             [@"--load-extension=" stringByAppendingString:extension],
+            [@"--browseros-server-resources-dir=" stringByAppendingString:server],
             @"--no-first-run", @"--no-default-browser-check",
             @"chrome://newtab/"
         ];
