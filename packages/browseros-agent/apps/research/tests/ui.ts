@@ -49,6 +49,15 @@ try {
   await page.click('button.primary')
   await page.waitForNetworkIdle()
   await page.waitForSelector('textarea[name="question"]')
+  assert(
+    await page.$eval(
+      '.integration-activity',
+      (el) =>
+        el.textContent?.includes('No task started.') &&
+        el.textContent.includes('Configured; no run yet.') &&
+        el.textContent.includes('Not used — local execution selected.'),
+    ),
+  )
   await page.screenshot({ path: 'test-results/desktop-empty.png' })
   await page.type(
     'textarea[name="question"]',

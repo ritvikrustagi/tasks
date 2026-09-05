@@ -54,7 +54,8 @@ To see a Nebius report, open this research workspace, start a task, and wait for
 **Write the report · Nebius** to succeed. The final answer is labeled **Nebius
 report**. The **Integration activity** panel beside the steps links directly to
 it and can be collapsed for normal use. On smaller screens it appears above
-the steps.
+the steps. Before starting a task, the panel shows which services are configured
+and makes clear that no activity has run yet.
 
 The panel updates from saved backend activity every two seconds: Linkup queries
 and source counts, Nebius model and input/output tokens, successful response

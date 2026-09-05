@@ -380,29 +380,34 @@ export function App() {
               evidence, and Render Workflows to run recoverable background
               steps.
             </p>
-            <Composer
-              key={brief.data?.text === undefined ? 'loading' : 'loaded'}
-              initialBrief={brief.data?.text ?? ''}
-              config={config.data}
-              onCreated={(id) => {
-                setSelected(id)
-                void client.invalidateQueries({ queryKey: keys.tasks })
-              }}
-            />
-            <div className="workflow-strip">
-              <span>
-                <Search /> Evidence
-              </span>
-              <span className="line" />
-              <span>
-                <FlaskConical /> Follow-up
-              </span>
-              <span className="line" />
-              <span>
-                <FileText /> Cited report
-              </span>
+            <div className="research-layout">
+              <div className="research-result">
+                <Composer
+                  key={brief.data?.text === undefined ? 'loading' : 'loaded'}
+                  initialBrief={brief.data?.text ?? ''}
+                  config={config.data}
+                  onCreated={(id) => {
+                    setSelected(id)
+                    void client.invalidateQueries({ queryKey: keys.tasks })
+                  }}
+                />
+                <div className="workflow-strip">
+                  <span>
+                    <Search /> Evidence
+                  </span>
+                  <span className="line" />
+                  <span>
+                    <FlaskConical /> Follow-up
+                  </span>
+                  <span className="line" />
+                  <span>
+                    <FileText /> Cited report
+                  </span>
+                </div>
+                <ErrorText error={tasks.error ?? config.error} />
+              </div>
+              <IntegrationActivity config={config.data} />
             </div>
-            <ErrorText error={tasks.error ?? config.error} />
           </div>
         )}
       </main>

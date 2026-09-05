@@ -1,6 +1,53 @@
 import { stepLabels, steps, type Task } from '../src/schema'
 
-export function IntegrationActivity({ task }: { task: Task }) {
+export function IntegrationActivity({
+  task,
+  config,
+}: {
+  task?: Task
+  config?: {
+    executor: string
+    connections: { name: string; configured: boolean }[]
+  }
+}) {
+  if (!task)
+    return (
+      <aside className="integration-activity" aria-label="Integration activity">
+        <details open>
+          <summary>
+            Integration activity <span className="tag">Testing</span>
+          </summary>
+          <p>
+            No task started. This panel will show activity as research runs.
+          </p>
+          {[
+            ['Linkup', 'Searches the web and saves sources.'],
+            ['Nebius Token Factory', 'Reviews evidence and writes the report.'],
+            ['Render Workflows', 'Runs background steps and retries.'],
+          ].map(([name, purpose]) => (
+            <div className="integration-executor" key={name}>
+              <h3>{name}</h3>
+              <p>{purpose}</p>
+              <p role="status">
+                {!config
+                  ? 'Loading configuration…'
+                  : name === 'Render Workflows' && config.executor !== 'render'
+                    ? 'Not used — local execution selected.'
+                    : config.connections.find((c) => c.name === name)
+                          ?.configured
+                      ? 'Configured; no run yet.'
+                      : 'Not configured.'}
+              </p>
+            </div>
+          ))}
+          <p>
+            Open Connections in the left sidebar for setup details. After
+            starting a task, the panel shows responses, model usage, workflow
+            status, and a link to the report.
+          </p>
+        </details>
+      </aside>
+    )
   const report = task.events.find((event) => event.step === 'report')?.result
     ?.report
   return (
