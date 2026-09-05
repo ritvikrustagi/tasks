@@ -163,6 +163,18 @@ export function App() {
             : 'Local workspace'}
           <span className="version">ALPHA</span>
         </footer>
+        <div className="built-with">
+          <span>Built with</span>
+          <a href="https://nebius.com" rel="noopener">
+            <img src="/nebius.svg" alt="Nebius" width={18} height={18} />
+          </a>
+          <a href="https://linkup.so" rel="noopener">
+            <img src="/linkup.svg" alt="Linkup" width={26} height={18} />
+          </a>
+          <a href="https://render.com" rel="noopener">
+            <img src="/render.svg" alt="Render" width={18} height={18} />
+          </a>
+        </div>
       </aside>
       <main>
         <header className="topbar">
