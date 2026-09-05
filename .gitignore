@@ -43,6 +43,7 @@ packages/browseros/build/extensions/
 .omc/
 .llm/
 .context/
+.vercel/
 packages/browseros-agent/apps/research/data/
 packages/browseros-agent/apps/research/test-results/
 

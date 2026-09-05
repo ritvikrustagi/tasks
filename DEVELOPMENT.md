@@ -31,6 +31,22 @@ Nebius writes the cited report. SQLite stores each step, evidence, and usage.
 Stop blocks further checkpoints; an already-started provider request can still
 consume credits. Resume reuses completed steps. Download exports Markdown.
 
+## Vercel frontend deployment
+
+The research frontend is hosted at https://burning-token-psi.vercel.app in the
+Vercel project `burning-token`. `.github/workflows/deploy-vercel.yml` deploys
+changes to `apps/research` automatically when they reach `main`; the workflow
+can also be run manually from GitHub Actions. It uses the repository's encrypted
+`VERCEL_TOKEN` secret, rather than Vercel's native GitHub integration. The current
+token expires December 4, 2026; replace that secret with a renewed token before
+then to keep deployments running.
+
+Vercel hosts the frontend only. Research execution, sessions, and SQLite still
+require the persistent backend described below. Until that backend is deployed
+and `/api/*` is routed to it, the UI displays a backend-unavailable message.
+Configure the backend's public origin and verify sessions before enabling that
+route; do not point it at a local development server.
+
 ## Render deployment
 
 Requires account access, credits, and this branch pushed to a connected repo.

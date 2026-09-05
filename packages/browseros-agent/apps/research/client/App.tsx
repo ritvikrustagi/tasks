@@ -38,6 +38,8 @@ async function api<T>(
     headers: body ? { 'Content-Type': 'application/json' } : undefined,
     body: body ? JSON.stringify(body) : undefined,
   })
+  if (!response.headers.get('content-type')?.includes('application/json'))
+    throw new Error('The research backend is not connected yet. Research will be available once it is deployed.')
   const data = await response.json()
   if (!response.ok) throw new Error(data.error ?? 'Request failed')
   return data

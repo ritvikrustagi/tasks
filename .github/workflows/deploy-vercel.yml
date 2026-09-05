@@ -1,0 +1,33 @@
+name: Deploy research frontend to Vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/browseros-agent/apps/research/**'
+      - '.github/workflows/deploy-vercel.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERCEL_ORG_ID: team_2IZ95WIu0om4TjaqF7IiUo9S
+      VERCEL_PROJECT_ID: prj_J6OnsLKSXI7967uuawRaVNmJWSqI
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Deploy production frontend
+        working-directory: packages/browseros-agent/apps/research
+        run: npx --yes vercel@59.11.7 deploy --prod --yes --token "$VERCEL_TOKEN"
