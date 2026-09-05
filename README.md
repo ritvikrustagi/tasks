@@ -1,3 +1,12 @@
+## Local project entry points
+
+- **AI Browser desktop app:** [build and development setup](DEVELOPMENT.md), [subscription setup](docs/DESKTOP_SUBSCRIPTIONS.md).
+- **Standalone browser-agent CLI:** [Node setup, Claude/ChatGPT sign-in, usage and validation](CLI_README.md). Run its npm commands from this repository root.
+
+The BrowserOS foundation documentation follows.
+
+---
+
 <div align="center">
 <img width="693" height="415" alt="github-banner" src="https://github.com/user-attachments/assets/8129f9c8-e8f4-4afe-834a-91397121d833" />
 

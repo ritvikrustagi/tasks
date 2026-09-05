@@ -45,3 +45,9 @@ packages/browseros/build/extensions/
 .context/
 packages/browseros-agent/apps/research/data/
 packages/browseros-agent/apps/research/test-results/
+
+# Standalone Node browser-agent CLI
+/runs/
+/.env.*
+!/.env.example
+!/package-lock.json

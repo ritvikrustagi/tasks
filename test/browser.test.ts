@@ -1,0 +1,68 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, rm, stat, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { createBrowser } from '../src/browser.js';
+import { snapshot, readPage } from '../src/snapshot.js';
+
+test('Chrome snapshots produce clickable refs, diffs, iframe refs and clean article text', { timeout: 60_000 }, async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'browser-agent-test-'));
+  const source = path.join(temporary, 'profile');
+  const cancelled = path.join(temporary, 'cancelled');
+  await assert.rejects(createBrowser({ profile: source, headed: false, runDir: cancelled, signal: AbortSignal.abort() }), { name: 'AbortError' });
+  await assert.rejects(stat(cancelled), /ENOENT/);
+  await assert.rejects(createBrowser({ profile: source, headed: false, runDir: path.join(temporary, 'run') }), /ENOENT/);
+  await assert.rejects(stat(path.join(temporary, 'run', 'browser-profile')), /ENOENT/);
+  await mkdir(source);
+  const session = await createBrowser({ profile: source, headed: false, runDir: path.join(temporary, 'run') });
+  try {
+    await session.page.setContent(`<nav>Unwanted nav</nav><main><h1>Example article</h1><p>Article content.</p><button onclick="this.textContent='Finished'">Start</button><button style="display:none">Hidden control</button><iframe srcdoc="<button>Frame action</button>"></iframe></main>`);
+    const first = await snapshot(session.page);
+    assert.ok(first.tree.length < 6500);
+    const ref = first.tree.match(/button "Start" \[ref=(e\d+)\]/)?.[1];
+    assert.ok(ref, first.tree);
+    await session.page.locator(ref).click();
+    const second = await snapshot(session.page);
+    assert.match(second.diff, /Finished/);
+    assert.equal((await snapshot(session.page)).diff, '[no changes]');
+    const frameRef = second.tree.match(/button "Frame action" \[ref=(f\d+e\d+)\]/)?.[1];
+    assert.ok(frameRef, second.tree);
+    await session.page.locator(frameRef).click();
+    assert.ok(!(await readPage(session.page)).includes('Unwanted nav'));
+    assert.ok(!first.tree.includes('Hidden control'));
+    assert.match((await snapshot(session.page, { showHidden: true })).tree, /Hidden control/);
+    await session.page.setContent(`${Array.from({ length: 80 }, (_, index) => `<p>Article paragraph ${index} ${'Long article text. '.repeat(12)}</p>`).join('')}<input aria-label="Late search">`);
+    const crowded = await snapshot(session.page);
+    assert.ok(crowded.tree.length < 6500);
+    assert.match(crowded.tree, /textbox "Late search"/);
+    const popupEvent = session.page.waitForEvent('popup');
+    await session.page.evaluate(() => { window.open('about:blank'); });
+    const popup = await popupEvent;
+    assert.ok(session.signals.some(signal => signal.startsWith('popup opened:')));
+    await popup.close();
+    const dialogEvent = session.page.waitForEvent('dialog');
+    const alertDone = session.page.evaluate(() => alert('Important question'));
+    const dialog = await dialogEvent;
+    assert.ok(session.signals.some(signal => signal.includes('Important question')));
+    assert.equal((session.page as typeof session.page & { pendingDialog: unknown }).pendingDialog, dialog);
+    await dialog.dismiss();
+    await alertDone;
+    await session.page.setContent('<a href="data:text/plain,artifact%20content" download="example.txt">Download</a>');
+    const downloadEvent = session.page.waitForEvent('download');
+    await session.page.getByRole('link', { name: 'Download' }).click();
+    await (await downloadEvent).path();
+    const fixture = path.join(temporary, 'fixture.html');
+    await writeFile(fixture, '<button>Other tab</button>');
+    const tab = await session.openTab(`file://${fixture}`);
+    assert.equal(session.page, tab);
+    assert.ok(session.signals.some(signal => signal.startsWith('navigated:')));
+    await session.closeTab(tab);
+    assert.equal(session.context.pages().length, 1);
+    await session.close();
+    assert.ok(session.signals.some(signal => signal.includes('download saved:') && signal.includes('example.txt')));
+  } finally {
+    await session.close();
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
