@@ -140,3 +140,13 @@ This is our suggested evidence checklist for covering all three tracks in one co
 - [ ] Explain each sponsor’s essential role and the relevant quality, speed, or cost choices.
 
 Keep boxes unchecked until there is evidence. As we build, add links to the deployed product, relevant implementation, evaluation results, and demo evidence here. Record any unmet track requirements before submission.
+
+## Browser-agent build evidence
+
+The supplied browser-agent brief is implemented as a local TypeScript CLI; see
+[CLI setup and usage](CLI_README.md), [observed validation](VALIDATION.md), and
+[track eligibility gaps](RUBRIC_ALIGNMENT.md). The user subsequently requested Claude and ChatGPT subscription support. The
+CLI implementation still uses browser-native research and has no Linkup, Nebius,
+or Render Workflows integration, so it does not currently qualify for the Linkup, Nebius, or Render Workflows tracks.
+The evaluation runner records blocked and failed cases without marking them as
+passes. Sponsor and deployed-product checkboxes above remain unchecked.

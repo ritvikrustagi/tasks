@@ -1,0 +1,29 @@
+{
+  "name": "browser-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A persistent-browser task agent using Claude or ChatGPT subscriptions",
+  "bin": {
+    "agent": "./src/cli.ts"
+  },
+  "scripts": {
+    "agent": "tsx src/cli.ts",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "smoke": "tsx scripts/smoke.ts",
+    "evaluate": "tsx scripts/evaluate.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.124.0",
+    "playwright-core": "1.63.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22"
+  }
+}
