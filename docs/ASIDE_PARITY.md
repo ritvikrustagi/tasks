@@ -18,10 +18,10 @@ never inside the downloadable application.
 | --- | --- | --- |
 | Desktop browser, tabs, sessions, history, downloads | Bundled BrowserOS native runtime; new macOS launcher | Clean installation and upgrade tests; our own signed/notarized native distribution |
 | Ask about tabs and automate websites | BrowserOS assistant and native browser tool engine | Live multi-site tasks with chosen model; intervention and cancellation checks |
-| ChatGPT subscription connection | Upstream provider; connection button opened OpenAI sign-in in the packaged app | User sign-in, real task, expiry/reconnect/revoke tests and distribution review remain |
-| Claude connection | Anthropic API preset and Claude Code agent option visible after runtime startup | User credentials and lifecycle tests remain; no promise of arbitrary Claude subscription reuse |
+| ChatGPT subscription connection | Native Codex connector reused ChatGPT sign-in and completed an attached-tab/article task | Direct OAuth path, expiry/reconnect/revoke tests and distribution review remain |
+| Claude connection | Native Claude Code connector reused subscription sign-in and completed a live browser task | API-provider and credential lifecycle tests remain |
 | Multiple providers/local models | Upstream provider settings, Ollama, OpenAI-compatible; added Nebius preset | Verify each enabled provider and tool-call compatibility |
-| Task history and progress | Upstream conversation history; research SQLite checkpoints and timeline | Live browser crash/recovery and durable hosted research tests |
+| Task history and progress | Sidebar provider choices and both tested conversations survived app restart; research SQLite checkpoints and timeline | Live browser crash/recovery and durable hosted research tests |
 | Research with citations | Linkup -> Nebius gap analysis -> Linkup follow-up -> Nebius report | Fund Linkup, activate Nebius, verify real outputs and evaluations |
 | Routines/scheduled tasks | Upstream scheduled-task UI and scheduler | Timezone, sleep/wake, overlap, failure, and sensitive-action approval tests |
 | Persistent memory | Saved research brief and upstream personalization/workspace context | Aside-style extracted cross-session memory with provenance, review, deletion, and reliable retrieval is not implemented |

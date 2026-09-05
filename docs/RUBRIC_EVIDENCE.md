@@ -45,7 +45,9 @@ Paths prefixed `research/` are relative to `packages/browseros-agent/apps/`.
   extension. ChatGPT and Claude Code entries appeared after the local server
   finished starting; ChatGPT's button opened the real OpenAI sign-in page.
   MCP settings displayed the local server URL and supported client controls.
-  No completed provider login, MCP pairing, or native source build is claimed.
+  The initial check did not complete login or a task; the subsequent native
+  subscription tests below did. MCP pairing and a native Chromium source build
+  remain unverified.
 - [Fixture evaluation artifact](evaluation-fixture.json) records actual fixture
   outputs and timings; no model-quality or live-service claims.
 - Latest focused suite: 13 tests / 51 assertions passed across research,
@@ -54,8 +56,11 @@ Paths prefixed `research/` are relative to `packages/browseros-agent/apps/`.
 - Desktop v3 builds the matching local server (0.0.155), fixing the initial
   vendor-server/provider API mismatch. In native UI the default provider loaded
   and the composer enabled after opening a new tab. First-start new-tab
-  registration polish remains. Subscription/sidebar tests are delegated to the
-  user's Tunis workspace; they are not yet recorded as passing here.
+  registration polish remains. Subsequent sidebar tests passed using existing
+  Claude and ChatGPT subscription sign-ins: Claude read the top three Hacker
+  News posts, and ChatGPT opened and summarized the top article. Both answers
+  were checked against the browser pages. Providers and conversations persisted
+  after restarting the installed app. See [desktop subscription evidence](DESKTOP_SUBSCRIPTIONS.md).
 - Latest upstream full test suite: two failures, missing Go executable and
   CDP startup timeout in server integration. The earlier native-addon failure
   did not recur. Logs: `.context/predeploy-test.log`; `check` exited zero with

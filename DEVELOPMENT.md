@@ -119,12 +119,12 @@ independent release. Do not bypass macOS security warnings to distribute it.
 
 The desktop artifact is `.context/desktop-v3/AI Browser.app`.
 Its Research link targets `https://ritvik-ai-browser.onrender.com`, which is
-**not deployed yet**. Ordinary browser and settings UI were checked; live
-provider login and agent execution were not. Allow the local agent server to
-finish starting: ChatGPT and Claude Code appear once its capabilities load.
-ChatGPT's connection button opened the real OpenAI sign-in page in this isolated
-profile. Completing sign-in and a real task remain user-dependent acceptance
-steps. See `docs/ASIDE_PARITY.md` for the remaining release gates.
+**not deployed yet**. The installed copy at `~/Applications/AI Browser.app` was
+verified with Claude and ChatGPT subscriptions through the native Claude Code
+and Codex connectors. Both completed browser tasks from the sidebar; provider
+choices and conversations persisted after restart. See
+[desktop subscription setup](docs/DESKTOP_SUBSCRIPTIONS.md) for usage and test
+evidence, and `docs/ASIDE_PARITY.md` for the remaining release gates.
 
 The packager builds the matching agent server with the upstream `--ci` build
 mode, adds its current database migrations, and retains vendor third-party
@@ -170,10 +170,10 @@ open -n .context/BrowserOS.app --args \
   http://127.0.0.1:4318
 ```
 
-ChatGPT OAuth and Claude API/provider code are inherited, not live-verified in
-this workspace. Claude subscription authentication for a third-party product
-requires provider-policy review/approval; it is not interchangeable with an API
-key. Do not paste provider cookies or subscription tokens into custom endpoints.
+Native Claude Code and Codex connectors were tested with existing subscription
+sign-ins. The separate direct ChatGPT OAuth and Anthropic API provider paths
+remain unverified. No provider cookies or subscription tokens were copied into
+custom endpoints. See the desktop subscription guide for the tested path.
 
 ## Operational limits
 
