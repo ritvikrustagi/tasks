@@ -312,6 +312,7 @@ mod tests {
                     | "DOM.enable"
                     | "Runtime.enable"
                     | "Accessibility.enable"
+                    | "Emulation.setFocusEmulationEnabled"
                     | "Runtime.runIfWaitingForDebugger" => Ok(json!({})),
                     "Runtime.evaluate" => {
                         if state.fail_evaluate {

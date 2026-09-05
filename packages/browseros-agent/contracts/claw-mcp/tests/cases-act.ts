@@ -120,6 +120,9 @@ export const actCases: ContractCase[] = [
     name: 'act: type enters text into a field',
     smoke: true,
     async run(ctx) {
+      const activeBefore = expectOk(
+        await ctx.mcp.callTool('tabs', { action: 'active' }),
+      )
       const page = await ctx.openPage(ctx.fixture('/form.html'))
       const snap = await snapshot(ctx, page)
       const nameRef = refFor(snap, '"Name ')
@@ -145,6 +148,14 @@ export const actCases: ContractCase[] = [
       )
       if (!value.includes('Ada Lovelace')) {
         throw new Error(`type did not fill the field: ${value}`)
+      }
+      const activeAfter = expectOk(
+        await ctx.mcp.callTool('tabs', { action: 'active' }),
+      )
+      if (activeAfter !== activeBefore || activeAfter.includes(`[${page}]`)) {
+        throw new Error(
+          `background typing changed the user's active tab: ${activeAfter}`,
+        )
       }
     },
   },

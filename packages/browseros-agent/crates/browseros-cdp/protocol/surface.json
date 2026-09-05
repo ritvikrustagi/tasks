@@ -63,6 +63,10 @@
       ]
     },
     {
+      "domain": "Emulation",
+      "commands": ["setFocusEmulationEnabled"]
+    },
+    {
       "domain": "History",
       "types": ["HistoryEntry"],
       "commands": ["search"]

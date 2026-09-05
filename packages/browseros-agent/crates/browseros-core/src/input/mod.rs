@@ -597,6 +597,7 @@ mod tests {
                     | "DOM.enable"
                     | "Runtime.enable"
                     | "Accessibility.enable"
+                    | "Emulation.setFocusEmulationEnabled"
                     | "Runtime.runIfWaitingForDebugger"
                     | "Target.setAutoAttach"
                     | "Runtime.releaseObject"

@@ -1979,6 +1979,7 @@ async fn handle_mock_cdp_method(
         | "DOM.enable"
         | "Runtime.enable"
         | "Accessibility.enable"
+        | "Emulation.setFocusEmulationEnabled"
         | "Runtime.runIfWaitingForDebugger"
         | "Target.setAutoAttach" => Ok(json!({})),
         "Page.captureScreenshot" => Ok(json!({ "data": "anBlZw==" })),

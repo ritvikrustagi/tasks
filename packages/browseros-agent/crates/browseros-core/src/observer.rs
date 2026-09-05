@@ -918,6 +918,7 @@ mod tests {
                     | "DOM.enable"
                     | "Runtime.enable"
                     | "Accessibility.enable"
+                    | "Emulation.setFocusEmulationEnabled"
                     | "Runtime.runIfWaitingForDebugger"
                     | "Target.setAutoAttach" => Ok(json!({})),
                     "Page.getFrameTree" => {
@@ -1053,6 +1054,7 @@ mod tests {
                     | "DOM.enable"
                     | "Runtime.enable"
                     | "Accessibility.enable"
+                    | "Emulation.setFocusEmulationEnabled"
                     | "Runtime.runIfWaitingForDebugger"
                     | "Target.setAutoAttach" => Ok(json!({})),
                     "Page.getFrameTree" => {
@@ -1215,6 +1217,7 @@ mod tests {
                     | "DOM.enable"
                     | "Runtime.enable"
                     | "Accessibility.enable"
+                    | "Emulation.setFocusEmulationEnabled"
                     | "Runtime.runIfWaitingForDebugger"
                     | "Target.setAutoAttach" => Ok(json!({})),
                     "Page.getFrameTree" => Ok(json!({

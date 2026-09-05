@@ -428,6 +428,14 @@ impl PageManager {
         let _: Value = session.send("DOM.enable", json!({})).await?;
         let _: Value = session.send("Runtime.enable", json!({})).await?;
         let _: Value = session.send("Accessibility.enable", json!({})).await?;
+        // Background tabs can otherwise acknowledge input without applying it
+        // on Linux. Emulate renderer focus without activating the user's tab.
+        let _: Value = session
+            .send(
+                "Emulation.setFocusEmulationEnabled",
+                json!({ "enabled": true }),
+            )
+            .await?;
         let _ = session
             .send::<_, Value>("Runtime.runIfWaitingForDebugger", json!({}))
             .await;

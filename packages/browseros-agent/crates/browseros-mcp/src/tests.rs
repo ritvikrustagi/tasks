@@ -228,6 +228,7 @@ impl CdpConnection for HarnessConnection {
                 | "DOM.enable"
                 | "Runtime.enable"
                 | "Accessibility.enable"
+                | "Emulation.setFocusEmulationEnabled"
                 | "Runtime.runIfWaitingForDebugger"
                 | "Target.setAutoAttach"
                 | "Page.handleJavaScriptDialog" => Ok(json!({})),
