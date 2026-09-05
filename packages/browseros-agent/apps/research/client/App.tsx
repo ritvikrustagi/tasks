@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { type FormEvent, useRef, useState } from 'react'
 import { combinedSources, type Task } from '../src/schema'
+import { IntegrationActivity } from './IntegrationActivity'
 import { ResearchSteps } from './ResearchSteps'
 
 const keys = {
@@ -277,7 +278,7 @@ export function App() {
             <ErrorText error={config.error} />
           </div>
         ) : current ? (
-          <div className="content">
+          <div className="content task-content">
             <div className="detail-heading">
               <div>
                 <div className="eyebrow">RESEARCH TASK</div>
@@ -379,29 +380,34 @@ export function App() {
               evidence, and Render Workflows to run recoverable background
               steps.
             </p>
-            <Composer
-              key={brief.data?.text === undefined ? 'loading' : 'loaded'}
-              initialBrief={brief.data?.text ?? ''}
-              config={config.data}
-              onCreated={(id) => {
-                setSelected(id)
-                void client.invalidateQueries({ queryKey: keys.tasks })
-              }}
-            />
-            <div className="workflow-strip">
-              <span>
-                <Search /> Evidence
-              </span>
-              <span className="line" />
-              <span>
-                <FlaskConical /> Follow-up
-              </span>
-              <span className="line" />
-              <span>
-                <FileText /> Cited report
-              </span>
+            <div className="research-layout">
+              <div className="research-result">
+                <Composer
+                  key={brief.data?.text === undefined ? 'loading' : 'loaded'}
+                  initialBrief={brief.data?.text ?? ''}
+                  config={config.data}
+                  onCreated={(id) => {
+                    setSelected(id)
+                    void client.invalidateQueries({ queryKey: keys.tasks })
+                  }}
+                />
+                <div className="workflow-strip">
+                  <span>
+                    <Search /> Evidence
+                  </span>
+                  <span className="line" />
+                  <span>
+                    <FlaskConical /> Follow-up
+                  </span>
+                  <span className="line" />
+                  <span>
+                    <FileText /> Cited report
+                  </span>
+                </div>
+                <ErrorText error={tasks.error ?? config.error} />
+              </div>
+              <IntegrationActivity config={config.data} />
             </div>
-            <ErrorText error={tasks.error ?? config.error} />
           </div>
         )}
       </main>
@@ -563,80 +569,89 @@ function TaskDetail({ task }: { task: Task }) {
     report = results.find((r) => r.report)?.report
   const usage = results.flatMap((r) => (r.usage ? [r.usage] : []))
   return (
-    <>
-      <ResearchSteps task={task} />
-      {report && (
-        <section className="report">
-          <div className="section-heading">
-            <FileText size={18} />
-            <h2>{report.title}</h2>
-          </div>
-          <p>{report.summary}</p>
-          {report.findings.map((f, i) => (
-            <div className="finding" id={`finding-${i + 1}`} key={f.text}>
-              <span className="finding-number">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <div>
-                <p>{f.text}</p>
-                <div className="citations">
-                  {f.sources.map((id) => {
-                    const s = sources.find((s) => s.id === id)
-                    return s ? (
-                      <a key={id} href={s.url} target="_blank" rel="noreferrer">
-                        {new URL(s.url).hostname}
-                        <ArrowUpRight size={12} />
-                      </a>
-                    ) : null
-                  })}
+    <div className="research-layout">
+      <div className="research-result">
+        <ResearchSteps task={task} />
+        {report && (
+          <section className="report" id="research-report">
+            <div className="eyebrow">NEBIUS REPORT</div>
+            <div className="section-heading">
+              <FileText size={18} />
+              <h2>{report.title}</h2>
+            </div>
+            <p>{report.summary}</p>
+            {report.findings.map((f, i) => (
+              <div className="finding" id={`finding-${i + 1}`} key={f.text}>
+                <span className="finding-number">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <p>{f.text}</p>
+                  <div className="citations">
+                    {f.sources.map((id) => {
+                      const s = sources.find((s) => s.id === id)
+                      return s ? (
+                        <a
+                          key={id}
+                          href={s.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {new URL(s.url).hostname}
+                          <ArrowUpRight size={12} />
+                        </a>
+                      ) : null
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          <h3>Could not confirm</h3>
-          {report.uncertainties.length ? (
+            ))}
+            <h3>Could not confirm</h3>
+            {report.uncertainties.length ? (
+              <ul>
+                {report.uncertainties.map((u) => (
+                  <li key={u}>{u}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>
+                No additional uncertainty reported by the model. Check cited
+                sources before acting.
+              </p>
+            )}
+            <h3>Next actions</h3>
             <ul>
-              {report.uncertainties.map((u) => (
-                <li key={u}>{u}</li>
+              {report.nextActions.map((a) => (
+                <li key={a}>{a}</li>
               ))}
             </ul>
-          ) : (
-            <p>
-              No additional uncertainty reported by the model. Check cited
-              sources before acting.
-            </p>
-          )}
-          <h3>Next actions</h3>
-          <ul>
-            {report.nextActions.map((a) => (
-              <li key={a}>{a}</li>
-            ))}
-          </ul>
+          </section>
+        )}
+        <section className="metrics">
+          <span>
+            <Clock3 size={15} />{' '}
+            {Math.round(
+              ((task.state === 'running' ? Date.now() : task.updated) -
+                task.created) /
+                1000,
+            )}
+            s since task created
+          </span>
+          <span>
+            {usage
+              .reduce((n, u) => n + u.inputTokens + u.outputTokens, 0)
+              .toLocaleString()}{' '}
+            recorded tokens
+          </span>
+          <span>{usage[0]?.model ?? 'No inference recorded'}</span>
         </section>
-      )}
-      <section className="metrics">
-        <span>
-          <Clock3 size={15} />{' '}
-          {Math.round(
-            ((task.state === 'running' ? Date.now() : task.updated) -
-              task.created) /
-              1000,
-          )}
-          s since task created
-        </span>
-        <span>
-          {usage
-            .reduce((n, u) => n + u.inputTokens + u.outputTokens, 0)
-            .toLocaleString()}{' '}
-          recorded tokens
-        </span>
-        <span>{usage[0]?.model ?? 'No inference recorded'}</span>
-      </section>
-      <details className="original-brief">
-        <summary>Original context</summary>
-        <p>{task.brief || 'No additional context attached.'}</p>
-      </details>
-    </>
+        <details className="original-brief">
+          <summary>Original context</summary>
+          <p>{task.brief || 'No additional context attached.'}</p>
+        </details>
+      </div>
+      <IntegrationActivity task={task} />
+    </div>
   )
 }
 function StatusIcon({ state }: { state: string }) {

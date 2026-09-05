@@ -8,6 +8,7 @@ import type { Providers } from './providers'
 import { runLocal } from './runner'
 import {
   planSchema,
+  providerResponseSchema,
   type Result,
   reportMarkdown,
   reportSchema,
@@ -35,6 +36,7 @@ const safeEqual = (a: string, b: string) => {
   return left.length === right.length && timingSafeEqual(left, right)
 }
 const resultSchema = z.object({
+  providerResponse: providerResponseSchema.optional(),
   query: z.string().max(2000).optional(),
   sources: z.array(sourceSchema).max(24).optional(),
   plan: planSchema.optional(),

@@ -49,6 +49,15 @@ try {
   await page.click('button.primary')
   await page.waitForNetworkIdle()
   await page.waitForSelector('textarea[name="question"]')
+  assert(
+    await page.$eval(
+      '.integration-activity',
+      (el) =>
+        el.textContent?.includes('No task started.') &&
+        el.textContent.includes('Configured; no run yet.') &&
+        el.textContent.includes('Not used — local execution selected.'),
+    ),
+  )
   await page.screenshot({ path: 'test-results/desktop-empty.png' })
   await page.type(
     'textarea[name="question"]',
@@ -64,6 +73,25 @@ try {
   await page.waitForFunction(() =>
     document.body.textContent?.includes('Why we searched again'),
   )
+  assert(
+    await page.$eval(
+      '.integration-activity',
+      (el) =>
+        el.textContent?.includes('Not used — this task runs locally.') &&
+        el.textContent.includes('fixture-not-live') &&
+        !el.textContent.includes('Live response recorded'),
+    ),
+  )
+  await page.click('.integration-activity a[href="#research-report"]')
+  await page.waitForFunction(() => location.hash === '#research-report')
+  assert(
+    await page.$eval('#research-report', (el) =>
+      el.textContent?.includes('NEBIUS REPORT'),
+    ),
+  )
+  await page.click('.integration-activity summary')
+  assert.equal(await page.$('.integration-activity details[open]'), null)
+  await page.click('.integration-activity summary')
   await page.click('.sources details summary')
   await page.waitForSelector('.sources details[open] .source-impact a')
   assert(
@@ -104,6 +132,12 @@ try {
       await page.$eval(
         '.task-list',
         (el) => el.getBoundingClientRect().height > 0,
+      ),
+    )
+    assert(
+      await page.$eval(
+        '.integration-activity',
+        (el) => el.getBoundingClientRect().width <= innerWidth,
       ),
     )
     await page.screenshot({

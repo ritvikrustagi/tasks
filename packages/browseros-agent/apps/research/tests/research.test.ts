@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { IntegrationActivity } from '../client/IntegrationActivity'
 import { ResearchSteps } from '../client/ResearchSteps'
 import { type AppConfig, createResearchApp } from '../src/app'
 import { createProviders } from '../src/providers'
@@ -48,6 +49,28 @@ describe('research execution', () => {
     await runLocal(store, providers, input.id)
     const task = store.get(input.id)!
     expect(task.state).toBe('succeeded')
+    const activity = renderToStaticMarkup(
+      createElement(IntegrationActivity, { task }),
+    )
+    expect(activity).toContain('Not used — this task runs locally.')
+    expect(activity).toContain('fixture-not-live')
+    expect(activity).toContain('No live response metadata')
+    expect(activity).not.toContain('Live response recorded')
+    expect(activity).toContain('href="#research-report"')
+    expect(activity).toContain('100 input / 50 output tokens')
+    const dispatched = { ...task, executor: 'render', runId: 'run-test-123' }
+    expect(
+      renderToStaticMarkup(
+        createElement(IntegrationActivity, { task: dispatched }),
+      ),
+    ).toContain('run-test-123')
+    expect(
+      renderToStaticMarkup(
+        createElement(IntegrationActivity, {
+          task: { ...dispatched, runId: null },
+        }),
+      ),
+    ).toContain('no dispatch confirmation recorded')
     expect(calls).toEqual([
       'search:Compare support tools for a small team',
       'infer:investigate',
@@ -273,6 +296,7 @@ test('real provider adapters use documented endpoints and reject invented citati
   )
   const evidenceResult = await p.search('policy')
   expect(evidenceResult.sources).toHaveLength(1)
+  expect(evidenceResult.providerResponse).toBeUndefined()
   await expect(
     p.infer('report', 'policy', '', [evidenceResult]),
   ).rejects.toThrow('unknown source')
@@ -285,6 +309,42 @@ test('real provider adapters use documented endpoints and reject invented citati
     depth: 'standard',
     outputType: 'searchResults',
   })
+})
+
+test('worker checkpoints retain provider response evidence for the activity panel', async () => {
+  const { store, input, providers } = setup()
+  const { app } = createResearchApp(store, providers, config)
+  const post = (path: string, body: unknown) =>
+    app.request(`${config.origin}${path}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${config.workerSecret}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+  const claim = await post(`/internal/tasks/${input.id}/claim/search`, {})
+  const { lease } = await claim.json()
+  // Synthetic metadata tests the display contract, not a live sponsor call.
+  const providerResponse = {
+    provider: 'linkup' as const,
+    completedAt: 1700000000000,
+    elapsedMs: 1250,
+  }
+  const response = await post(`/internal/tasks/${input.id}/finish/search`, {
+    lease,
+    result: { sources: [evidence], query: input.question, providerResponse },
+    error: null,
+  })
+  expect(response.status).toBe(200)
+  const task = store.get(input.id)!
+  expect(task.events[0].result?.providerResponse).toEqual(providerResponse)
+  const html = renderToStaticMarkup(
+    createElement(IntegrationActivity, { task }),
+  )
+  expect(html).toContain('Live response recorded')
+  expect(html).toContain('1.25')
+  expect(html).not.toContain(config.workerSecret)
 })
 
 test('saved trace survives restart and connects both searches to the outcome', async () => {
