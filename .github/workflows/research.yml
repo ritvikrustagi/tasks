@@ -1,0 +1,86 @@
+name: Research and Offload
+
+on:
+  push:
+    paths:
+      - '.github/workflows/research.yml'
+      - 'packages/browseros-agent/**'
+      - '.gitignore'
+      - 'src/**'
+      - 'test/**'
+      - 'package*.json'
+      - 'tsconfig.json'
+  pull_request:
+    paths:
+      - '.github/workflows/research.yml'
+      - 'packages/browseros-agent/**'
+      - '.gitignore'
+      - 'src/**'
+      - 'test/**'
+      - 'package*.json'
+      - 'tsconfig.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-agent:
+    name: Browser agent tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run typecheck
+
+  test:
+    name: Typecheck, tests, and browser flows
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/browseros-agent
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: packages/browseros-agent/package.json
+      - run: bun ci
+      - run: cp .env.development.example .env.development
+      - name: Typecheck all workspace packages
+        run: bunx turbo run typecheck
+      - name: Check environment examples and CI suite discovery
+        run: |
+          bun test ci/affected-suites.test.ts packages/shared/src/env scripts/env packages/build-server-tools
+          bun run env:examples:check
+      - name: Research and Offload tests
+        working-directory: packages/browseros-agent/apps/research
+        run: bun test tests
+      - name: Build research app
+        working-directory: packages/browseros-agent/apps/research
+        run: bun run build
+      - name: Research and Offload browser flows
+        working-directory: packages/browseros-agent/apps/research
+        run: |
+          export CHROME_PATH="$(command -v google-chrome)"
+          bun run test:ui
+          bun run test:offload-ui
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-browser-screenshots
+          path: packages/browseros-agent/apps/research/test-results/
+          if-no-files-found: ignore

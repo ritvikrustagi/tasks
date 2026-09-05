@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   deploy:
+    # The download site and its Vercel credentials are owned by tasks.
+    if: github.repository == 'ritvikrustagi/tasks'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:

@@ -24,6 +24,14 @@ export interface SuiteConfig {
 
 /** Every suite, in the order `test.yml` declares them (stable CI ordering). */
 export const SUITES: Record<string, SuiteConfig> = {
+  research: {
+    suite: 'research',
+    command:
+      '(cd apps/research && bun test tests --reporter=junit --reporter-outfile=../../test-results/research.xml)',
+    junit_path: 'test-results/research.xml',
+    needs_browser: false,
+    needs_rust: false,
+  },
   'server-agent': {
     suite: 'server-agent',
     command: '(cd apps/server && bun run test:agent)',
@@ -141,6 +149,7 @@ export const SUITES: Record<string, SuiteConfig> = {
 
 /** Workspace package name -> the suites that cover it. */
 const PACKAGE_SUITES: Record<string, string[]> = {
+  '@browseros/research': ['research'],
   '@browseros/server': [
     'server-agent',
     'server-api',

@@ -34,6 +34,7 @@ const browser = await puppeteer.launch({
     process.env.CHROME_PATH ??
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   headless: true,
+  args: process.env.CI ? ['--no-sandbox'] : [],
 })
 mkdirSync('test-results', { recursive: true })
 try {

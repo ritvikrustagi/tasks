@@ -17,6 +17,12 @@ function suiteNames(
 }
 
 describe('computeAffectedSuites', () => {
+  it('runs research and Offload tests when the research app changes', () => {
+    expect(suiteNames([pkg('@browseros/research', 'apps/research')])).toEqual([
+      'research',
+    ])
+  })
+
   it('returns nothing when nothing is affected', () => {
     expect(suiteNames([], [])).toEqual([])
   })
@@ -148,6 +154,7 @@ describe('computeAffectedSuites', () => {
     // A change to @browseros/shared marks all packages affected (Turbo global
     // hash); the mapping should then request every suite.
     const allPackages: AffectedPackage[] = [
+      pkg('@browseros/research', 'apps/research'),
       pkg('@browseros/server', 'apps/server'),
       pkg('@browseros/app', 'apps/app'),
       pkg('@browseros/claw-app', 'apps/claw-app'),

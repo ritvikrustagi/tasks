@@ -4,6 +4,11 @@
 .gcs_entries
 **/dmg
 **/env
+# Source directories named env are code, not virtual environments.
+!packages/browseros-agent/packages/shared/src/env/
+!packages/browseros-agent/packages/shared/src/env/**
+!packages/browseros-agent/scripts/env/
+!packages/browseros-agent/scripts/env/**
 **/logs
 **/old-scripts
 
