@@ -102,7 +102,7 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
   if (message.includes('Failed to fetch') || message.includes('fetch failed')) {
     return {
       title: 'Connection failed',
-      text: 'Unable to connect to BrowserOS agent. Follow below instructions.',
+      text: 'Unable to connect to Bloom Search agent. Follow below instructions.',
       url: 'https://docs.browseros.com/troubleshooting/connection-issues',
       linkLabel: 'View troubleshooting guide',
       canRetry: true,

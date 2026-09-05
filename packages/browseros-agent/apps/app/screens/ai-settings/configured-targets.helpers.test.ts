@@ -87,7 +87,7 @@ describe('agentDescription', () => {
 describe('providerDescription', () => {
   it('describes the built-in provider without leaking config', () => {
     expect(helpers.providerDescription(provider, true)).toBe(
-      'BrowserOS-hosted model with strict rate limits',
+      'Bloom Search-hosted model with strict rate limits',
     )
   })
 

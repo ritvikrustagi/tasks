@@ -1,7 +1,5 @@
 import type { FC } from 'react'
 import { useNavigate } from 'react-router'
-import { BrowserClawPromoBanner } from '@/components/promo/BrowserClawPromoBanner'
-import { ProductHuntBanner } from '@/components/promo/ProductHuntBanner'
 import { Feature } from '@/lib/browseros/capabilities'
 import { createBrowserOSAction } from '@/lib/chat-actions/types'
 import { openSidePanelWithSearch } from '@/lib/messaging/sidepanel/openSidepanelWithSearch'
@@ -94,7 +92,7 @@ export const AgentCommandHome: FC = () => {
               next?
             </h1>
             <p className="mx-auto max-w-2xl text-muted-foreground text-sm leading-6 [text-wrap:pretty]">
-              Pick BrowserOS AI or any agent, then start a task — all without
+              Pick Bloom Search AI or any agent, then start a task — all without
               leaving this tab.
             </p>
           </div>
@@ -123,7 +121,6 @@ export const AgentCommandHome: FC = () => {
 
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 pb-12">
           <RecentSites />
-          <ProductHuntBanner fallback={<BrowserClawPromoBanner />} />
           <ScheduleResults />
         </div>
       </div>
