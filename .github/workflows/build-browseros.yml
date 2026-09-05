@@ -386,6 +386,24 @@ jobs:
           }
           "CODE_SIGN_TOOL_PATH=$($tool.Directory.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
+      - name: Preflight required secrets
+        if: inputs.product == 'browseros'
+        env:
+          BROWSEROS_CONFIG_URL: ${{ secrets.BROWSEROS_CONFIG_URL }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          set -euo pipefail
+          required=(BROWSEROS_CONFIG_URL POSTHOG_API_KEY SENTRY_DSN)
+          missing=()
+          for name in "${required[@]}"; do
+            if [ -z "${!name:-}" ]; then missing+=("$name"); fi
+          done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "::error::Missing required secret(s): ${missing[*]}"
+            exit 1
+          fi
+
       - name: Build ${{ inputs.product }}
         working-directory: packages/browseros
         env:
