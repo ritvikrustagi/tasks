@@ -36,7 +36,7 @@ consume credits. Resume reuses completed steps. Download exports Markdown.
 
 The desktop app download page is hosted at https://burning-token-psi.vercel.app
 in the Vercel project `burning-token`. The static site lives in `site/` and links
-to the Mac app archive in the `bloom-search-v0.1.1` GitHub release.
+to the Mac app archive in the `bloom-search-v0.1.2` GitHub release.
 `.github/workflows/deploy-vercel.yml` deploys changes to `site/` automatically
 when they reach `main`; the workflow
 can also be run manually from GitHub Actions. It uses the repository's encrypted

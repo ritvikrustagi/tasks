@@ -58,3 +58,6 @@ The existing `AI Browser/Profile` data path is retained so the rebrand does not
 reset saved conversations, provider connections, or browser sessions. Native
 BrowserOS internals and license notices remain those of the bundled upstream
 runtime; the launcher remains ad-hoc signed, not Apple-notarized.
+
+Version 0.1.2 replaces the flower with the approved teal compass for the Mac app
+and assistant extension icons. The profile and provider connections are unchanged.
