@@ -2,6 +2,12 @@ import { z } from 'zod'
 
 export const steps = ['search', 'investigate', 'followup', 'report'] as const
 export type Step = (typeof steps)[number]
+export const stepLabels: Record<Step, string> = {
+  search: 'Search the web · Linkup',
+  investigate: 'Review saved evidence',
+  followup: 'Search the missing information · Linkup',
+  report: 'Complete the task',
+}
 export const taskInput = z.object({
   id: z.string().uuid(),
   question: z.string().trim().min(8).max(2000),
@@ -123,5 +129,49 @@ export function reportMarkdown(task: Task): string {
     ...report.nextActions.map((s) => `- ${s}`),
     '## Sources',
     ...sources.map((s) => `[${s.id}]: <${s.url}>`),
+    '## Saved research steps',
+    ...task.events.flatMap((event, index) => {
+      const result = event.result
+      return [
+        `### ${index + 1}. ${stepLabels[event.step]}`,
+        `Status: ${event.state}. Saved: ${new Date(event.updated).toISOString()}. Attempt: ${event.attempts}.`,
+        ...(result?.query ? [`Search query: ${result.query}`] : []),
+        ...(event.step === 'search'
+          ? [
+              'Why this search: find initial evidence for the research question.',
+            ]
+          : event.step === 'followup'
+            ? [
+                `Why this search: ${results.find((r) => r.plan)?.plan?.reason ?? 'No saved reason.'}`,
+              ]
+            : []),
+        ...(result?.plan
+          ? [
+              'Saved findings used to choose the next search:',
+              ...result.plan.findings.map(
+                (f) =>
+                  `- ${f.text} ${f.sources.map((id) => `[${id}]`).join(' ')}`,
+              ),
+              'Missing information:',
+              ...result.plan.gaps.map((gap) => `- ${gap}`),
+              `Why this search: ${result.plan.reason}`,
+              `Next search: ${result.plan.query}`,
+            ]
+          : []),
+        ...(result?.sources?.flatMap((source) => {
+          const usedBy = report.findings.flatMap((finding, i) =>
+            finding.sources.includes(source.id) ? [i + 1] : [],
+          )
+          return [
+            `#### ${source.title} [${source.id}]`,
+            `Source: <${source.url}>`,
+            source.content,
+            usedBy.length
+              ? `Cited in final findings: ${usedBy.join(', ')}.`
+              : 'Not cited in the final findings.',
+          ]
+        }) ?? []),
+      ]
+    }),
   ].join('\n\n')
 }

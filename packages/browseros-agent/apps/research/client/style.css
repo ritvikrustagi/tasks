@@ -424,21 +424,6 @@ h3 {
   color: #859187;
   flex-wrap: wrap;
 }
-.timeline {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 35px 0;
-  border-top: 1px solid #e2e8e3;
-  border-bottom: 1px solid #e2e8e3;
-  padding: 22px 0;
-  gap: 15px;
-}
-.stage {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  min-width: 0;
-}
 .stage-marker {
   display: flex;
   align-items: center;
@@ -455,24 +440,6 @@ h3 {
   background: #e8f1eb;
   color: #41835a;
   border-color: #e8f1eb;
-}
-.stage strong {
-  font-size: 11px;
-  font-weight: 500;
-}
-.stage span {
-  display: block;
-  font-size: 10px;
-  color: #8b978e;
-  margin-top: 5px;
-}
-.stage p {
-  font-size: 10px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-.query {
-  color: #77887b;
 }
 section {
   padding: 25px 0;
@@ -653,9 +620,6 @@ section li {
   .content {
     padding: 38px 26px;
   }
-  .timeline {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .detail-heading {
     flex-direction: column;
   }
@@ -736,4 +700,44 @@ section li {
   .task-meta {
     gap: 10px;
   }
+}
+
+.research-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.research-step {
+  display: flex;
+  gap: 14px;
+  padding: 22px 0;
+  border-top: 1px solid #e6ebe7;
+}
+.step-body {
+  min-width: 0;
+  flex: 1;
+}
+.step-body h3 {
+  margin: 0;
+}
+.step-body h4 {
+  margin: 18px 0 8px;
+  font-size: 12px;
+}
+.step-body .step-status {
+  font-size: 11px;
+  color: #63746a;
+}
+.step-body .sources summary > span {
+  flex: 1;
+}
+.step-finding {
+  margin: 14px 0;
+}
+.step-body .source-impact {
+  font-size: 12px;
+}
+
+.sources details[open] summary > svg {
+  transform: rotate(180deg);
 }

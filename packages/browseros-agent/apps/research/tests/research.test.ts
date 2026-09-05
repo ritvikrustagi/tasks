@@ -2,6 +2,9 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { ResearchSteps } from '../client/ResearchSteps'
 import { type AppConfig, createResearchApp } from '../src/app'
 import { createProviders } from '../src/providers'
 import { runLocal, runStep } from '../src/runner'
@@ -190,6 +193,7 @@ test('HTTP API enforces session, origin, task ownership, and worker authenticati
     ['POST', '/stop'],
     ['POST', '/resume'],
     ['GET', '/export'],
+    ['GET', '/evidence'],
     ['DELETE', ''],
   ])
     expect(
@@ -204,6 +208,17 @@ test('HTTP API enforces session, origin, task ownership, and worker authenticati
     undefined,
     cookie,
   )
+  const saved = await req(
+    `/api/tasks/${input.id}/evidence`,
+    'GET',
+    undefined,
+    cookie,
+  )
+  expect(saved.status).toBe(200)
+  expect(saved.headers.get('content-disposition')).toContain(
+    'research-evidence.json',
+  )
+  expect((await saved.json()).events).toHaveLength(4)
   expect(exported.status).toBe(200)
   expect(await exported.text()).toContain('Vendor recommendation')
   expect(
@@ -270,4 +285,104 @@ test('real provider adapters use documented endpoints and reject invented citati
     depth: 'standard',
     outputType: 'searchResults',
   })
+})
+
+test('saved trace survives restart and connects both searches to the outcome', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'research-trace-'))
+  const db = join(dir, 'data.sqlite')
+  let store = new ResearchStore(db)
+  try {
+    const id = crypto.randomUUID()
+    store.create(
+      'owner',
+      {
+        id,
+        question: 'Compare support tools for our team',
+        brief: 'Retention under 30 days',
+        consent: true,
+        failOnce: false,
+      },
+      'local',
+    )
+    const { providers } = fixtureProviders()
+    const policy = {
+      ...evidence,
+      id: 'policy',
+      title: 'Retention policy',
+      url: 'https://example.com/retention',
+      content: 'Retention is 14 days on Enterprise.',
+    }
+    const search = providers.search
+    providers.search = async (query) =>
+      query.includes('retention policy')
+        ? { query, sources: [policy] }
+        : search(query)
+    const infer = providers.infer
+    providers.infer = async (stage, question, brief, results) => {
+      if (stage === 'investigate') {
+        expect(results[0].sources).toEqual([evidence])
+        expect(store.get(id)!.events[0].state).toBe('succeeded')
+      } else {
+        expect(results[2].sources).toEqual([policy])
+        expect(store.get(id)!.events[2].state).toBe('succeeded')
+      }
+      const result = await infer(stage, question, brief, results)
+      if (result.report) {
+        result.report.findings.push({
+          text: policy.content,
+          sources: [policy.id],
+        })
+        result.report.uncertainties = [
+          'Enterprise price could not be confirmed.',
+        ]
+      }
+      return result
+    }
+    await runLocal(store, providers, id)
+    store.close()
+    store = new ResearchStore(db)
+    const task = store.get(id)!
+    expect(task.state).toBe('succeeded')
+    const markdown = reportMarkdown(task)
+    for (const text of [
+      'Saved research steps',
+      'Why this search',
+      'Retention is unspecified',
+      'Example vendor official retention policy',
+      policy.content,
+      'Cited in final findings: 2.',
+      'Enterprise price could not be confirmed.',
+    ])
+      expect(markdown).toContain(text)
+    const html = renderToStaticMarkup(createElement(ResearchSteps, { task }))
+    for (const text of [
+      'Research steps',
+      'Search the web · Linkup',
+      'What the saved evidence says',
+      'Why we searched again',
+      'Retention is unspecified',
+      policy.content,
+      'href="#finding-2"',
+      'Could not confirm',
+    ])
+      expect(html).toContain(text)
+    expect(html.match(/<time /g)).toHaveLength(4)
+    expect(html.match(/<details/g)).toHaveLength(2)
+  } finally {
+    store.close()
+    rmSync(dir, { recursive: true })
+  }
+})
+
+test('stopped tasks never show a running spinner or claim a planned search ran', () => {
+  const { store, input } = setup()
+  store.claim(input.id, 'search')
+  store.cancel(input.id)
+  const html = renderToStaticMarkup(
+    createElement(ResearchSteps, { task: store.get(input.id)! }),
+  )
+  expect(html).toContain('cancelled')
+  expect(html).toContain('Planned search')
+  expect(html).not.toContain('spin')
+  expect(html).not.toContain('Saved <time')
 })
