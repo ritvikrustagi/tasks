@@ -123,3 +123,32 @@ Paths prefixed `research/` are relative to `packages/browseros-agent/apps/`.
 - One accidentally broad root test invocation encountered missing dependencies
   and unrelated monorepo failures; it is not a full-repository passing result.
   The focused app checks above are the validated scope.
+
+## Sponsor credential verification (September 5, latest)
+
+This supersedes the earlier account-availability observations above.
+
+- Loaded the existing sponsor environment and then the supplied Render access
+  into private, gitignored configuration. Restarted the local research service;
+  its existing MCP connector reports Linkup and Nebius configured. Native
+  BrowserOS chat layout is unchanged.
+- Linkup's authenticated balance endpoint returned HTTP 200 and zero credits.
+  Successful live search and follow-up remain unverified.
+- Nebius `Qwen/Qwen3-235B-A22B-Instruct-2507` returned HTTP 200 on a live JSON
+  smoke request (812 ms, 18 input / 6 output tokens). The actual investigation
+  and report adapters also passed schema and citation-ID validation using
+  explicitly synthetic evidence: 3,709 ms / 252 input / 221 output tokens, and
+  4,626 ms / 408 input / 331 output tokens, respectively.
+- Semantic review: the three report findings matched the supplied fixture;
+  absent Enterprise pricing and retention were disclosed. The summary assumed
+  a monthly billing period absent from that fixture. This is a limitation, not
+  a passing accuracy score. These calls do not establish Linkup integration or
+  Render execution. Account-level cost was not independently measured.
+- Render authenticated successfully to the Burning Token workspace. It listed
+  no existing services. Workflow creation returned HTTP 402: payment information
+  is required. No service or Workflow deployment was created. Web and Workflow
+  configurations are prepared privately; live deployment, remote retries, and
+  the three-case deployed evaluation remain pending.
+- Credential-free raw observations are retained in the ignored
+  `.context/sponsor-connection-check.json` and
+  `.context/nebius-inference-check.json` files.
