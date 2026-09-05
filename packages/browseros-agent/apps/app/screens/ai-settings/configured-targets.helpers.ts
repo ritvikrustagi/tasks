@@ -7,7 +7,7 @@ export function providerDescription(
   provider: LlmProviderConfig,
   isBuiltIn: boolean,
 ): string {
-  if (isBuiltIn) return 'BrowserOS-hosted model with strict rate limits'
+  if (isBuiltIn) return 'Bloom Search-hosted model with strict rate limits'
   return provider.baseUrl
     ? `${provider.modelId} · ${provider.baseUrl}`
     : provider.modelId

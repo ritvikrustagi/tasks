@@ -1,6 +1,5 @@
 import { type FC, useCallback, useEffect, useState } from 'react'
 import { getMcpServerUrl } from '@/lib/browseros/helpers'
-import { BrowserClawMcpBanner } from './BrowserClawMcpBanner'
 import { IntegrationsSection } from './IntegrationsSection'
 import { MCPServerHeader } from './MCPServerHeader'
 import { MCPToolsSection } from './MCPToolsSection'
@@ -35,8 +34,6 @@ export const MCPSettingsPage: FC = () => {
         error={urlError}
         onServerRestart={loadServerUrl}
       />
-
-      <BrowserClawMcpBanner />
 
       <IntegrationsSection serverUrl={serverUrl} />
 

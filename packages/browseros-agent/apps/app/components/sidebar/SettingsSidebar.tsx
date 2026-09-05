@@ -70,11 +70,11 @@ const primarySettingsSections: NavSection[] = [
     label: 'Other',
     items: [
       {
-        name: 'Customize BrowserOS',
+        name: 'Customize Bloom Search',
         to: '/settings/customization',
         icon: Palette,
       },
-      { name: 'BrowserOS as MCP', to: '/settings/mcp', icon: Server },
+      { name: 'Bloom Search as MCP', to: '/settings/mcp', icon: Server },
       {
         name: 'Usage & Billing',
         to: '/settings/usage',

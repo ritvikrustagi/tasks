@@ -19,7 +19,7 @@ const resolveProvider = async (
   // already catch and surface this.
   if (loaded === null) {
     throw new Error(
-      'Cannot reach the BrowserOS server to load the selected provider',
+      'Cannot reach the Bloom Search server to load the selected provider',
     )
   }
 
